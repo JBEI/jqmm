@@ -1,0 +1,248 @@
+&NUMBERSTART 1  # start enumeration of carbons from 1
+# note: [c] must be designated explicitly in the options list
+# note: bug in Suthers' Python network assembly code -- does NOT play well with filenames containing > 1 dot (something with the shorthand for the current path, for inst
+#ance -- ./FAEE0410/FAEE_blahblah.txt).  will drop unnamed emu_network files in the current directory.
+# note: include a metabolite name in the MLIST to get it in fully enumerated form suitable for GCMS
+
+# biomass fluxes
+#&MLIST g6pbm 0	
+#&MLIST f6pbm 0	
+#&MLIST r5pbm 0	
+#&MLIST e4pbm 0	
+#&MLIST g3pbm 0	
+#&MLIST 13dpgbm 0	
+#&MLIST pepbm 0	
+#&MLIST pyrbm 0	
+#&MLIST accoabm 0
+#&MLIST oaabm 0	
+#&MLIST akgbm 0	
+#&MLIST co2bm 0
+
+# aa fluxes
+#&MLIST ala-L[c] 0
+#&MLIST ala-L[c] -1
+#&MLIST asp-L[c] 0
+##&MLIST asp-L[c] -1
+##&MLIST met-L[c] 0
+##&MLIST met-L[c] -1
+#&MLIST glu-L[c] 0
+##&MLIST glu-L[c] -1
+##&MLIST pro-L[c] 0
+#&MLIST pro-L[c] -1
+#&MLIST ser-L[c] 0
+#&MLIST ser-L[c] -1
+#&MLIST gly[c] 0
+##&MLIST gly[c] -1
+#&MLIST val-L[c] 0
+#&MLIST val-L[c] -1
+#&MLIST ile-L[c] 0
+#&MLIST ile-L[c] -1
+#&MLIST phe-L[c] 0
+#&MLIST phe-L[c] -1
+#&MLIST tyr-L[c] 0
+#&MLIST tyr-L[c] -1
+
+# metab fluxes
+&MLIST etoh[e] 0
+&MLIST ac[e] 0
+&MLIST lac-L[e] 0
+#&MLIST glucon 0
+
+# Intracellular met fluxes
+&MLIST fdp 0
+&MLIST dhap 0
+&MLIST 3pg 0
+&MLIST pep 0
+#&MLIST pyr 0
+&MLIST ru5p-D 0
+&MLIST r5p 0
+&MLIST s7p 0
+&MLIST mal-L 0
+
+
+&SOURCE glc-D[e]
+
+#&EXCLUDE co2 mlthf
+#&MLIST mlthf 0
+
+
+&VERBOSE
+
+# Input Reactions
+EX_glc(e)	glc-D[e] <==> glcDEx	abcdef : abcdef
+GLCt2	glc-D[e] --> glc-D	abcdef : abcdef
+HEX1	glc-D --> g6p	abcdef : abcdef
+
+
+# KEIO Reactions
+GLCpts	glc-D[e] + pep --> g6p + pyr	abcdef + ABC : abcdef + ABC
+PGI	g6p <==> f6p	abcdef : abcdef
+PFK	f6p --> fdp	abcdef : abcdef
+FBA	fdp <==> g3p + dhap	CBAabc : abc + ABC
+TPI	dhap <==> g3p	abc : abc
+GAPD	g3p --> 13dpg	abc : abc
+PGK	3pg <==> 13dpg	abc : abc
+PGM	2pg <==> 3pg	abc : abc
+ENO	2pg <==> pep	abc : abc
+PYK	pep --> pyr	abc : abc
+PDH	pyr --> co2 + accoa	abc : a + bc
+G6PDH2r	g6p --> 6pgl 	abcdef : abcdef
+GND	6pgc --> co2 + ru5p-D 	abcdef : a + bcdef
+PGL	6pgl --> 6pgc 	abcdef : abcdef
+RPE	ru5p-D <==> xu5pD	abcde : abcde
+RPI	r5p <==> ru5p-D	abcde : abcde
+TK1	xu5pD <==> TKC2 + g3p	abcde : ab + cde 
+TK2	f6p <==> TKC2 + e4p	abcdef : ab + cdef 
+TK3	s7p <==> TKC2 + r5p	abcdefg : ab + cdefg 
+TA1	f6p <==> TAC3 + g3p	abcdef : abc + def 
+TA2	s7p <==> TAC3 + e4p	abcdefg : abc + defg 
+#TKT1	xu5pD + r5p <==> g3p + s7p	ABCDE + abcde : CDE + ABabcde 
+#TALA	g3p + s7p <==> f6p + e4p	ABC + abcdefg : abcABC + defg 
+#TKT2	xu5pD + e4p <==> g3p + f6p	abABC + cdef : ABC + abcdef
+CS	oaa + accoa --> cit	abcd + AB : dcbBAa
+ACONT	cit --> icit	abcdef : abcdef
+ICDHyr	icit --> akg + co2	abcdef : abcde + f
+AKGDH	akg --> succoa + co2	abcde : bcde + a
+SUCOAS	succ <==> succoa 	bcde : (bcde;edcb)
+SUCD1i	succ --> fum	abcd : (abcd;dcba)
+FUM	fum --> mal-L	abcd : (abcd;dcba)
+MDH	mal-L <==> oaa	abcd : abcd
+PPC	pep + co2 --> oaa	abc + d : abcd
+PPCK	oaa --> pep + co2	abcd : abc + d
+ME1	mal-L --> pyr + co2	abcd : abc + d
+ICL	icit --> succ + glx	ABCDEF : (FCDE;EDCF) + AB
+MALS	glx + accoa --> mal-L	AB + CD : ABCD
+EDD	6pgc --> 2ddg6p 	abcdef : abcdef 
+EDA	2ddg6p --> pyr + g3p 	abcdef : abc + def 
+
+PTAr	accoa --> actp 	ab : ab
+ACKr	ac <==> actp 	ab : ab
+
+# Extra reactions
+ME2	mal-L --> pyr + co2	abcd : abc + d
+F6PA	f6p --> g3p + dha	CBAabc : abc + ABC
+DHAPT	dha + pep --> dhap + pyr	ABC + abc : ABC + abc
+
+# New reactions after ELVA
+#ACOTA	acorn + akg <==> acg5sa + glu-L[c]	abcdefg + ABCDE : abcdefg + ABCDE
+LEUTAi	4mop + glu-L[c] --> akg + leu-L[c]	abcdef + ABCDE : ABCDE + abcdef
+SDPTA	akg + sl26da <==> glu-L[c] + sl2a6o	ABCDE + abcdefghijk : ABCDE + abcdefghijk 
+#ACOTA	akg <==> glu-L[c]	ABCDE : ABCDE
+#LEUTAi	glu-L[c] --> akg	ABCDE : ABCDE
+#SDPTA	akg <==> glu-L[c]	ABCDE : ABCDE
+
+
+
+## Amino acid fluxes
+# Simple pathways
+ALATA_L	ala-L[c] + akg <==> pyr + glu-L[c]	abc + ABCDE  : abc + ABCDE
+GLUDy	glu-L[c] <==> akg	abcde : abcde
+#GLU5K	glu-L[c] --> pro-L[c]	abcde : abcde
+ASPTA	akg + asp-L[c] <==> glu-L[c] + oaa	ABCDE + abcd : ABCDE + abcd
+#Methionine synthesis is wrong. Should be: oaa+ser-L[c]-->gly[c]+met-L[c]  abcd+efg : ef + abcdg
+#Metsyn	oaa --> met-L[c]	abcde : abcde
+PGCD	3pg --> 3php	abc : abc
+PSERT	glu-L[c] + 3php --> akg + pser-L	ABCDE + abc : ABCDE + abc
+PSP_L	pser-L --> ser-L[c]	abc : abc
+GHMT2	ser-L[c] --> mlthf + gly[c]	abc : c + ab
+GLYCL	gly[c] <==> co2 + mlthf	ab : a + b
+#ACLS	pyr --> pyrb	abc : abc
+#VALTA	pyr + pyrb --> val-L[c] + co2	ABC + abc : ABbCc + a
+#DDPA	pep + e4p --> co2 + pre	ABC + EFGH : A + BCEFGH
+#PSCVT	pre + pep --> phe-L[c]	BCEFGH + abc : abcBCEFGH
+#TYRTA	pre + pep --> tyr-L[c]	    BCEFGH + abc : abcBCEFGH
+#ILETA	pyr + oaa --> ile-L[c]	ABC + abcd : abBcCd
+#PRPPS	r5p + mlthf --> hisL	abcde + f : abcdef 
+# Threonine loop to gly
+ASPK	asp-L[c] <==> 4pasp	abcd : abcd
+ASAD	aspsa <==> 4pasp	abcd : abcd
+HSDy	homL <==> aspsa	abcd : abcd
+HSK	homL --> phom	abcd : abcd
+THRS	phom --> thrL	abcd : abcd
+THRAr	thrL <==> acald + gly[c]	abcd : cd + ab	
+ACALDi	acald --> accoa	ab : ab	
+# Proline Synthesis
+#Prosyn	akg --> pro-L[c]	abcde : abcde
+GLU5K	glu-L[c] --> glu5p	abcde : abcde
+G5SD	glu5p --> glu5sa	abcde : abcde
+G5SADs	glu5sa --> 1pyr5c	abcde : abcde
+P5CR	1pyr5c --> pro-L[c]	abcde : abcde
+
+# Valine Synthesis
+ACLS	pyr + pyr --> alac-S + co2	cde + fgh : fgdhe + c   
+KARA1i	alac-S --> 23dhmb	abcde : abcde
+DHAD1	23dhmb --> 3mob	abcde : abcde
+VALTA	akg + val-L[c] <==> glu-L[c] + 3mob	ABCDE + abcde : ABCDE + abcde
+
+# Phenylalanine and Tyrosine  Synthesis
+DDPA	e4p + pep --> 2dda7p	ABCD + abc : abcABCD
+DHQS	2dda7p --> 3dhq	abcdefg : abcdefg
+DHQD	3dhq <==> 3dhsk	abcdefg : abcdefg
+SHK3Dr	3dhsk <==> skm	abcdefg : abcdefg
+SHKK	skm --> skm5p	abcdefg : abcdefg
+PSCVT	skm5p + pep --> 3psme	abcABCD + def : abcefABCDd
+CHORS	3psme --> chor	abcdefghij : abcdefghij
+CHORM	chor --> pphn	abcdefghij : abcdefghij
+PPNDH	pphn --> phpyr + co2	abcdefghij : abcdefghi + j
+PHETA1	akg + phe-L[c] <==> glu-L[c] + phpyr	ABCDE + abcdefghi : ABCDE + abcdefghi
+#Tyrsyn	pre + pep --> tyr-L[c]	    BCEFGH + abc : abcBCEFGH
+PPND	pphn --> 34hpp + co2	abcdefghij : abcdefghi + j
+TYRTA	akg + tyr-L[c] <==> glu-L[c] + 34hpp	ABCDE + abcdefghi : ABCDE + abcdefghi
+
+# Isoleucine synthesis
+#Ilesyn	pyr + oaa --> ile-L[c]	ABC + abcd : abBcCd
+THRD_L	thrL --> 2obut	ABCD : ABCD
+ACHBS	2obut + pyr --> 2ahbut + co2	abcd + ABC : abBcCd + A
+KARA2i	2ahbut --> 23dhmp	abcdef : abcdef
+DHAD2	23dhmp --> 3mop	abcdef : abcdef
+ILETA	akg + ile-L[c] <==> glu-L[c] + 3mop	ABCDE + abcdef : ABCDE + abcdef
+
+
+# Leucine synthesis
+##ACLS	pyr + accoa --> leuLp + co2	CDE + AB : ABDE + C
+##ACLS	pyr + pyr  --> alacS + co2	CDE + FGH : DGHEF + C
+#ACLS	pyr --> alacS	abc : abc
+##KARA1i	alacS  --> 23dhmb	abcde : abcde
+#KARA1i	alacS + pyr --> 23dhmb + co2	CDE + FGH : DGHEF + C
+#DHAD1	23dhmb --> 3mob	abcde : abcde
+#IPPS	3mob + accoa --> 3c3hmp	DGHEF + AB : ABDGHEF
+#IPPMIb	3c3hmp <==> 2ippm	abcdefg : abcdefg
+#IPPMIa	2ippm <==> 3c2hmp 	abcdefg : abcdefg
+#IPMD	3c2hmp --> 3c4mop	abcdefg : abcdefg
+#OMCDC	3c4mop --> 4mop + co2	ABDGHEF : ABDGHE + F
+#LEUTAi	4mop --> leuL	ABDGHE : ABDGHE
+
+
+
+# Fluxes out
+L_LACD2	lac_L_c <==> pyr	abc : abc
+L_LACD3	lac_L_c <==> pyr	abc : abc
+L_LACt2r	lac_L[e] <==> lac-L_c	abc : abc
+#GLCNt2r	g6p --> glucon	abcdef : abcdef
+ADHEr	accoa --> etoh	ab : ab
+ETOHt2r	etoh[e] <==> etoh	ab : ab
+ACACCT	accoa --> ac	ab : ab
+# Labeling for POX need to be checked
+POX	pyr --> ac + co2	abc : bc + a
+
+
+EX_lac_L(e)	lac-L[e] <==> lac-LEX	abc : abc
+EX_etoh(e)	etoh[e] <==> etohEX	ab : ab
+
+## biomass fluxes
+#G6Pbm	g6p --> g6pbm	abcdef : abcdef
+#F6Pbm	f6p --> f6pbm	abcdef : abcdef
+#R5Pbm	r5p --> r5pbm	abcde : abcde
+#E4Pbm	e4p --> e4pbm	abcd : abcd
+#G3Pbm	g3p --> g3pbm	abc : abc
+#13dpgbm	13dpg --> 13dpgbm	abc : abc
+#PEPbm	pep --> pepbm	abc : abc
+#PYRbm	pyr --> pyrbm	abc : abc
+#AcCoabm	accoa --> accoabm	ab : ab
+#OAAbm	oaa --> oaabm	abcd : abcd
+#AKGbm	akg --> akgbm	abcde : abcde
+
+#CO2bm	co2 --> co2bm	a : a
+
+
+

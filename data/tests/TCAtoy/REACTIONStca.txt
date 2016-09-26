@@ -1,0 +1,24 @@
+&NUMBERSTART 1  # start enumeration of carbons from 1
+
+# Metabolites with measured labeling, integers after metabolite are excluded carbon numbers, with 0 including all carbons
+#Add glu_L_c_1_2_3 to AtomTransitions
+&MLIST glu_L_c 0
+
+# Sources
+&SOURCE accoa_c
+&SOURCE asp_c
+
+&VERBOSE
+
+# Reactions
+
+
+r1	oac_c + accoa_c --> cit_c	abcd + ef : dcbfea
+r2	cit_c --> akg_c + co2_c	abcdef : abcde + f
+r3	akg_c --> glu_L_c	abcde : abcde
+r4	akg_c --> suc_c + co2_c	abcde : (bcde;edcb) + a
+r5	suc_c --> fum_c	abcd : (abcd;dcba)
+r6	fum_c --> oac_c	abcd : (abcd;dcba) 
+r7	oac_c --> fum_c	abcd : (abcd;dcba) 
+r8	asp_c --> oac_c	abcd : abcd
+co2Out	co2_c --> co2ext_c	a : a

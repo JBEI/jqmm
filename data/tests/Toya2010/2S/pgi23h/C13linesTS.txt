@@ -1,0 +1,163 @@
+&NUMBERSTART 1
+&MLIST 3pg_c 0
+&MLIST 3pg_c 0
+&MLIST 3pg_c 0
+&MLIST dhap_c 0
+&MLIST dhap_c 0
+&MLIST dhap_c 0
+&MLIST etoh_e 0
+&MLIST etoh_e 0
+&MLIST fdp_c 0
+&MLIST fdp_c 0
+&MLIST lac_L_e 0
+&MLIST lac_L_e 0
+&MLIST mal_L_c 0
+&MLIST mal_L_c 0
+&MLIST mal_L_c 0
+&MLIST mal_L_c 0
+&MLIST mal_L_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST pep_c 0
+&MLIST r5p_c 0
+&MLIST r5p_c 0
+&MLIST r5p_c 0
+&MLIST ru5p_D_c 0
+&MLIST ru5p_D_c 0
+&MLIST ru5p_D_c 0
+&MLIST s7p_c 0
+&MLIST s7p_c 0
+&SOURCE glc_D_e
+&SOURCE glc_D_e
+&SOURCE glc_D_e
+&VERBOSE
+ABTA	4abut_c + akg_c --> sucsal_c + glu_L_c	bcde + ABCDE : bcde + ABCDE
+ABUTD	4abutn_c --> 4abut_c	bcde : bcde
+ACACCT	accoa_c --> ac_c	ab : ab
+ACALDi	acald_c --> accoa_c	ab : ab
+ACGK	acglu_c --> acg5p_c	abcdepq : abcdepq
+ACGS	accoa_c + glu_L_c --> acglu_c	pq + abcde : abcdepq
+ACHBS	2obut_c + pyr_c --> 2ahbut_c + co2_c	abcd + ABC : abBcCd + A
+ACLS	pyr_c + pyr_c --> alac_S_c + co2_c	cde + fgh : fgdhe + c
+ACODA	acorn_c --> ac_c + orn_c	abcdepq : pq + abcde
+ACONT	cit_c --> icit_c	abcdef : abcdef
+ACOTA	acorn_c + akg_c <==> acg5sa_c + glu_L_c	abcdepq + ghijk : abcdepq + ghijk
+ADHEr	accoa_c --> etoh_c	ab : ab
+ADSL1r	dcamp_c --> fum_c	abcd : abcd
+ADSL2r	25aics_c --> aicar_c + fum_c	ABCDEFGHIcdba : ABCDEFGHI + (abcd;bcda)
+ADSS	asp_L_c --> dcamp_c	abcd : abcd
+AGMT	agm_c --> ptrc_c + urea_c	bcdef : (bcde;edcb) + f
+AGPR	acg5sa_c <==> acg5p_c	abcdepq : abcdepq
+AIRC2	air_c + hco3_c --> 5caiz_c	ABCDEFGH + a : ABCDEFGHa
+AIRC3	5aizc_c <==> 5caiz_c	ABCDEFGHI : ABCDEFGHI
+AKGDH	akg_c --> succoa_c + co2_c	abcde : bcde + a
+ALATA_L	ala_L_c + akg_c <==> pyr_c + glu_L_c	abc + ABCDE  : abc + ABCDE
+ARGDC	arg_L_c --> agm_c + co2_c	abcdef : bcdef + a
+ARGSL	argsuc_c <==> arg_L_c + fum_c	abcdeflmno : abcdef + (lmno;onml)
+ARGSS	asp_L_c + citr_L_c --> argsuc_c	lmno + abcdef : abcdeflmno
+ASAD	aspsa_c <==> 4pasp_c	abcd : abcd
+ASPK	asp_L_c <==> 4pasp_c	abcd : abcd
+ASPTA	akg_c + asp_L_c <==> glu_L_c + oaa_c	ABCDE + abcd : ABCDE + abcd
+CBMK	co2_c --> cbp_c	a : a
+CBPS	gln_L_c + hco3_c --> cbp_c + glu_L_c	 ghijk + f : f + ghijk
+CHORM	chor_c --> pphn_c	abcdefghij : abcdefghij
+CHORS	3psme_c --> chor_c	abcdefghij : abcdefghij
+CS	oaa_c + accoa_c --> cit_c	abcd + AB : dcbBAa
+DDPA	e4p_c + pep_c --> 2dda7p_c	ABCD + abc : abcABCD
+DHAD1	23dhmb_c --> 3mob_c	abcde : abcde
+DHAD2	23dhmp_c --> 3mop_c	abcdef : abcdef
+DHAPT	dha_c + pep_c --> dhap_c + pyr_c	ABC + abc : ABC + abc
+DHQD	3dhq_c <==> 3dhsk_c	abcdefg : abcdefg
+DHQS	2dda7p_c --> 3dhq_c	abcdefg : abcdefg
+EDA	2ddg6p_c --> pyr_c + g3p_c 	abcdef : abc + def
+EDD	6pgc_c --> 2ddg6p_c 	abcdef : abcdef
+ENO	2pg_c <==> pep_c	abc : abc
+ETOHt2r	etoh_e <==> etoh_c	ab : ab
+EX_etoh_e_	etoh_e <==> etohEX_c	ab : ab
+EX_glc_e_	glc_D_e <==> glcDEx_c	abcdef : abcdef
+EX_lac_L_e_	lac_L_e <==> lac_LEX_c	abc : abc
+F6PA	f6p_c --> g3p_c + dha_c	CBAabc : abc + ABC
+FBA	fdp_c <==> g3p_c + dhap_c	CBAabc : abc + ABC
+FUM	fum_c --> mal_L_c	abcd : abcd
+G5SADs	glu5sa_c --> 1pyr5c_c	abcde : abcde
+G5SD	glu5p_c --> glu5sa_c	abcde : abcde
+G6PDH2r	g6p_c --> 6pgl_c 	abcdef : abcdef
+GAPD	g3p_c --> 13dpg_c	abc : abc
+GART	for_c + gar_c --> fgam_c	a + ABCDEFG : ABCDEFGa
+GHMT2	ser_L_c --> mlthf_c + gly_c	abc : c + ab
+GLCpts	glc_D_e + pep_c --> g6p_c + pyr_c	abcdef + ABC : abcdef + ABC
+GLCt2	glc_D_e --> glc_D_c	abcdef : abcdef
+GLNS	glu_L_c --> gln_L_c	abcde : abcde
+GLU5K	glu_L_c --> glu5p_c	abcde : abcde
+GLUDy	glu_L_c <==> akg_c	abcde : abcde
+GLUPRT	gln_L_c + prpp_c --> glu_L_c + pram_c	abcde + ABCDE : abcde + ABCDE
+GLYCL	gly_c <==> co2_c + mlthf_c	ab : a + b
+GMPS2	gln_L_c --> glu_L_c	abcde : abcde
+GND	6pgc_c --> co2_c + ru5p_D_c 	abcdef : a + bcdef
+HCO3E	co2_c <==> hco3_c	f : f
+HEX1	glc_D_c --> g6p_c	abcdef : abcdef
+HSDy	hom_L_c <==> aspsa_c	abcd : abcd
+HSK	hom_L_c --> phom_c	abcd : abcd
+ICDHyr	icit_c --> akg_c + co2_c	abcdef : abcde + f
+ICL	icit_c --> succ_c + glx_c	ABCDEF : FCDE + AB
+ILETA	akg_c + ile_L_c <==> glu_L_c + 3mop_c	ABCDE + abcdef : ABCDE + abcdef
+KARA1i	alac_S_c --> 23dhmb_c	abcde : abcde
+KARA2i	2ahbut_c --> 23dhmp_c	abcdef : abcdef
+LEUTAi	4mop_c + glu_L_c --> akg_c + leu_L_c	abcdef + ABCDE : ABCDE + abcdef
+L_LACD2	lac_L_c <==> pyr_c	abc : abc
+L_LACD3	lac_L_c <==> pyr_c	abc : abc
+L_LACt2r	lac_L_e <==> lac_L_c	abc : abc
+MALS	glx_c + accoa_c --> mal_L_c	AB + CD : ABCD
+MDH	mal_L_c <==> oaa_c	abcd : abcd
+ME1	mal_L_c --> pyr_c + co2_c	abcd : abc + d
+ME2	mal_L_c --> pyr_c + co2_c	abcd : abc + d
+OCBT	cbp_c + orn_c <==> citr_L_c	f + abcde : abcdef
+P5CR	1pyr5c_c --> pro_L_c	abcde : abcde
+PDH	pyr_c --> co2_c + accoa_c	abc : a + bc
+PFK	f6p_c --> fdp_c	abcdef : abcdef
+PGCD	3pg_c --> 3php_c	abc : abc
+PGI	g6p_c <==> f6p_c	abcdef : abcdef
+PGK	3pg_c <==> 13dpg_c	abc : abc
+PGL	6pgl_c --> 6pgc_c 	abcdef : abcdef
+PGM	2pg_c <==> 3pg_c	abc : abc
+PHETA1	akg_c + phe_L_c <==> glu_L_c + phpyr_c	ABCDE + abcdefghi : ABCDE + abcdefghi
+POX	pyr_c --> ac_c + co2_c	abc : bc + a
+PPC	pep_c + co2_c --> oaa_c	abc + d : abcd
+PPCK	oaa_c --> pep_c + co2_c	abcd : abc + d
+PPND	pphn_c --> 34hpp_c + co2_c	abcdefghij : abcdefghi + j
+PPNDH	pphn_c --> phpyr_c + co2_c	abcdefghij : abcdefghi + j
+PRAGSr	gly_c + pram_c <==> gar_c	ab + ABCDE : ABCDEab
+PRAIS	fpram_c --> air_c	ABCDEFGH : ABCDEFGH
+PRASCS	5aizc_c + asp_L_c <==> 25aics_c	ABCDEFGHI + abcd  : ABCDEFGHIcdba
+PRFGS	fgam_c + gln_L_c --> fpram_c + glu_L_c	ABCDEFGH + abcde : ABCDEFGH + abcde
+PRPPS	r5p_c <==> prpp_c	abcde : abcde
+PSCVT	skm5p_c + pep_c --> 3psme_c	abcABCD + def : abcefABCDd
+PSERT	glu_L_c + 3php_c --> akg_c + pser_L_c	ABCDE + abc : ABCDE + abc
+PSP_L	pser_L_c --> ser_L_c	abc : abc
+PTRCTA	ptrc_c + akg_c --> 4abutn_c + glu_L_c	(bcde;edcb) + ABCDE : bcde + ABCDE
+PYK	pep_c --> pyr_c	abc : abc
+RPE	ru5p_D_c <==> xu5p_D_c	abcde : abcde
+RPI	r5p_c <==> ru5p_D_c	abcde : abcde
+SDPTA	akg_c + sl26da_c <==> glu_L_c + sl2a6o_c	ABCDE + abcdefghijk : ABCDE + abcdefghijk
+SHK3Dr	3dhsk_c <==> skm_c	abcdefg : abcdefg
+SHKK	skm_c --> skm5p_c	abcdefg : abcdefg
+SSALx	sucsal_c --> succ_c	bcde : (bcde;edcb)
+SSALy	sucsal_c --> succ_c	bcde : (bcde;edcb)
+SUCD1i	succ_c --> fum_c	abcd : abcd
+SUCOAS	succ_c <==> succoa_c 	bcde : (bcde;edcb)
+TA1	f6p_c <==> TAC3_c + g3p_c	abcdef : abc + def
+TA2	s7p_c <==> TAC3_c + e4p_c	abcdefg : abc + defg
+THRAr	thr_L_c <==> acald_c + gly_c	abcd : cd + ab
+THRD_L	thr_L_c --> 2obut_c	ABCD : ABCD
+THRS	phom_c --> thr_L_c	abcd : abcd
+TK1	xu5p_D_c <==> TKC2_c + g3p_c	abcde : ab + cde
+TK2	f6p_c <==> TKC2_c + e4p_c	abcdef : ab + cdef
+TK3	s7p_c <==> TKC2_c + r5p_c	abcdefg : ab + cdefg
+TPI	dhap_c <==> g3p_c	abc : abc
+TYRTA	akg_c + tyr_L_c <==> glu_L_c + 34hpp_c	ABCDE + abcdefghi : ABCDE + abcdefghi
+VALTA	akg_c + val_L_c <==> glu_L_c + 3mob_c	ABCDE + abcde : ABCDE + abcde

@@ -1,0 +1,111 @@
+&NUMBERSTART 1  # start enumeration of carbons from 1
+# note: [c] must be designated explicitly in the options list
+# note: bug in Suthers' Python network assembly code -- does NOT play well with filenames containing > 1 dot (something with the shorthand for the current path, for inst
+#ance -- ./FAEE0410/FAEE_blahblah.txt).  will drop unnamed emu_network files in the current directory.
+# note: include a metabolite name in the MLIST to get it in fully enumerated form suitable for GCMS
+
+
+# metab fluxes
+&MLIST ac_e 0
+
+
+# Intracellular met fluxes
+&MLIST fdp_c 0
+&MLIST dhap_c 0
+&MLIST 3pg_c 0
+&MLIST pep_c 0
+&MLIST pyr_c 0
+&MLIST ru5p_D_c 0
+&MLIST r5p_c 0
+&MLIST s7p_c 0
+&MLIST mal_L_c 0
+
+
+&SOURCE glc_D_e
+
+#&EXCLUDE co2_c mlthf_c
+#&MLIST mlthf_c 0
+
+
+&VERBOSE
+
+
+# KEIO Reactions
+GLCpts	glc_D_e + pep_c --> g6p_c + pyr_c	abcdef + ABC : abcdef + ABC
+PGI	g6p_c <==> f6p_c	abcdef : abcdef
+PFK	f6p_c --> fdp_c	abcdef : abcdef
+FBA	fdp_c <==> g3p_c + dhap_c	CBAabc : abc + ABC
+TPI	dhap_c <==> g3p_c	abc : abc
+GAPD	g3p_c --> 13dpg_c	abc : abc
+PGK	3pg_c <==> 13dpg_c	abc : abc
+PGM	2pg_c <==> 3pg_c	abc : abc
+ENO	2pg_c <==> pep_c	abc : abc
+PYK	pep_c --> pyr_c	abc : abc
+PDH	pyr_c --> co2_c + accoa_c	abc : a + bc
+G6PDH2r	g6p_c --> 6pgl_c 	abcdef : abcdef
+GND	6pgc_c --> co2_c + ru5p_D_c 	abcdef : a + bcdef
+PGL	6pgl_c --> 6pgc_c 	abcdef : abcdef
+RPE	ru5p_D_c <==> xu5pD_c	abcde : abcde
+RPI	r5p_c <==> ru5p_D_c	abcde : abcde
+TK1	xu5pD_c <==> TKC2_c + g3p_c	abcde : ab + cde 
+TK2	f6p_c <==> TKC2_c + e4p_c	abcdef : ab + cdef 
+TK3	s7p_c <==> TKC2_c + r5p_c	abcdefg : ab + cdefg 
+TA1	f6p_c <==> TAC3_c + g3p_c	abcdef : abc + def 
+TA2	s7p_c <==> TAC3_c + e4p_c	abcdefg : abc + defg 
+CS	oaa_c + accoa_c --> cit_c	abcd + AB : dcbBAa
+ACONT	cit_c --> icit_c	abcdef : abcdef
+ICDHyr	icit_c --> akg_c + co2_c	abcdef : abcde + f
+AKGDH	akg_c --> succoa_c + co2_c	abcde : bcde + a
+SUCOAS	succ_c <==> succoa_c 	bcde : (bcde;edcb)
+SUCD1i	succ_c --> fum_c	abcd : (abcd;dcba)
+FUM	fum_c --> mal_L_c	abcd : (abcd;dcba)
+MDH	mal_L_c <==> oaa_c	abcd : abcd
+PPC	pep_c + co2_c --> oaa_c	abc + d : abcd
+PPCK	oaa_c --> pep_c + co2_c	abcd : abc + d
+ME1	mal_L_c --> pyr_c + co2_c	abcd : abc + d
+ICL	icit_c --> succ_c + glx_c	ABCDEF : (FCDE;EDCF) + AB
+MALS	glx_c + accoa_c --> mal_L_c	AB + CD : ABCD
+EDD	6pgc_c --> 2ddg6p_c 	abcdef : abcdef 
+EDA	2ddg6p_c --> pyr_c + g3p_c 	abcdef : abc + def 
+
+# Extra reactions
+#ME2	mal_L_c --> pyr_c + co2_c	abcd : abc + d
+F6PA	f6p_c --> g3p_c + dha_c	CBAabc : abc + ABC
+DHAPT	dha_c + pep_c --> dhap_c + pyr_c	ABC + abc : ABC + abc
+
+
+
+## Amino acid fluxes
+# Simple pathways
+GLUDy	glu_L_c <==> akg_c	abcde : abcde
+PGCD	3pg_c --> 3php_c	abc : abc
+
+
+# Phenylalanine and Tyrosine  Synthesis
+DDPA	e4p_c + pep_c --> 2dda7p_c	ABCD + abc : abcABCD
+
+
+# Fluxes out
+ACACCT	accoa_c --> ac_e	ab : ab
+
+
+## biomass fluxes
+G6Pbm	g6p_c --> g6pbm_c	abcdef : abcdef
+F6Pbm	f6p_c --> f6pbm_c	abcdef : abcdef
+PEPbm	pep_c --> pepbm_c	abc : abc
+PYRbm	pyr_c --> pyrbm_c	abc : abc
+AcCoabm	accoa_c --> accoabm_c	ab : ab
+OAAbm	oaa_c --> oaabm_c	abcd : abcd
+
+3PHPbm	3php_c --> 3phpbm_c	abc : abc
+ALAbm	ala_L_c --> alabm_c	abc : abc
+VALbm	val_L_c --> valbm_c	abcde : abcde
+GLUbm	glu_L_c --> glubm_c	abcde : abcde
+R5Pbm	r5p_c --> r5pbm_c	abcde : abcde
+2DDA7Pbm	2dda7p_c --> 2dda7pbm_c	abcdefg : abcdefg
+
+
+CO2bm	co2_c --> co2bm_c	a : a
+
+
+

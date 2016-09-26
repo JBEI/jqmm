@@ -1,0 +1,27 @@
+&NUMBERSTART 1  # start enumeration of carbons from 1
+
+# Metabolites with measured labeling
+&MLIST co2_c 0
+
+# Sources
+#&SOURCE glc_D_e
+&SOURCE pyr_c
+
+&VERBOSE
+
+# Reactions
+
+
+#r1	glc_D_e --> g6p_c	abcdef : abcdef
+#r2	g6p_c --> f6p_c	abcdef : abcdef
+#r3	f6p_c --> g3p_c	abcdef : cba + def
+#r4	g3p_c --> pyr_c	abc : abc
+r5	pyr_c --> accoa_c + co2_c	abc : bc + a
+r6	accoa_c + oaa_c --> icit_c	ab +ABCD : abABCD 
+r7	icit_c --> akg_c + co2_c	abcdef : abdef + c 
+r8	akg_c --> oaa_c + co2_c	abcde : abcd + e
+r9	pyr_c + co2_c --> oaa_c	abc +A : abcA 
+#r10	g6p_c --> r5p_c + co2_c	abcdef : bcdef + a 
+#r11	r5p_c + r5p_c  --> s7p_c + g3p_c	abcde + ABCDE : ABabcde + CDE
+#r12	s7p_c + g3p_c --> f6p_c + e4p_c	abcdefg + ABC : abcABC + defg 
+#r13	r5p_c + e4p_c --> f6p_c + g3p_c	abcde + ABCD : abABCD + cde

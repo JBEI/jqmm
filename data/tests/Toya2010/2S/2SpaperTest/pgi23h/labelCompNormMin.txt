@@ -1,0 +1,1 @@
+labelCompNormMin = 0.99;

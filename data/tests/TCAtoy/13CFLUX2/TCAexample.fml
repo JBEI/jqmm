@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?><fluxml xmlns="http://www.13cflux.net/fluxml">
+  <info>
+    <name>Nature Protocol</name>
+    <version>1.0</version>
+    <comment/>
+  </info>
+  <reactionnetwork>
+    <metabolitepools>
+      <pool atoms="2" id="AcCoa0"/>
+      <pool atoms="2" id="AcCoa"/>
+      <pool atoms="6" id="Cit"/>
+      <pool atoms="5" id="AKG"/>
+      <pool atoms="5" id="Glu"/>
+      <pool atoms="4" id="Suc"/>
+      <pool atoms="4" id="Fum"/>
+      <pool atoms="4" id="OAC"/>
+      <pool atoms="4" id="Asp"/>
+      <pool atoms="1" id="CO2"/>
+    </metabolitepools>
+    <reaction id="AcCoaIn">
+      <reduct cfg="AB" id="AcCoa0"/>
+      <rproduct cfg="AB" id="AcCoa"/>
+    </reaction>
+    <reaction id="r1">
+      <reduct cfg="ABCD" id="OAC"/>
+      <reduct cfg="EF" id="AcCoa"/>
+      <rproduct cfg="DCBFEA" id="Cit"/>
+    </reaction>
+    <reaction id="r2">
+      <reduct cfg="ABCDEF" id="Cit"/>
+      <rproduct cfg="ABCDE" id="AKG"/>
+      <rproduct cfg="F" id="CO2"/>
+    </reaction>
+    <reaction id="r3">
+      <reduct cfg="ABCDE" id="AKG"/>
+      <rproduct cfg="ABCDE" id="Glu"/>
+    </reaction>
+    <reaction id="r4a">
+      <reduct cfg="ABCDE" id="AKG"/>
+      <rproduct cfg="BCDE" id="Suc"/>
+      <rproduct cfg="A" id="CO2"/>
+    </reaction>
+    <reaction id="r4b">
+      <reduct cfg="ABCDE" id="AKG"/>
+      <rproduct cfg="EDCB" id="Suc"/>
+      <rproduct cfg="A" id="CO2"/>
+    </reaction>
+    <reaction id="r5a">
+      <reduct cfg="ABCD" id="Suc"/>
+      <rproduct cfg="ABCD" id="Fum"/>
+    </reaction>
+    <reaction id="r5b">
+      <reduct cfg="ABCD" id="Suc"/>
+      <rproduct cfg="DCBA" id="Fum"/>
+    </reaction>
+    <reaction id="r6a">
+      <reduct cfg="ABCD" id="Fum"/>
+      <rproduct cfg="ABCD" id="OAC"/>
+    </reaction>
+   <reaction id="r6b">
+      <reduct cfg="ABCD" id="Fum"/>
+      <rproduct cfg="DCBA" id="OAC"/>
+    </reaction>
+    <reaction id="r7a">
+      <reduct cfg="ABCD" id="OAC"/>
+      <rproduct cfg="ABCD" id="Fum"/>
+    </reaction> 
+    <reaction id="r7b">
+      <reduct cfg="ABCD" id="OAC"/>
+      <rproduct cfg="DCBA" id="Fum"/>
+    </reaction> 
+   <reaction id="r8">
+      <reduct cfg="ABCD" id="Asp"/>
+      <rproduct cfg="ABCD" id="OAC"/>
+    </reaction>
+    <reaction id="CO2out">
+      <reduct cfg="A" id="CO2"/>
+    </reaction>
+    <reaction id="Gluout">
+      <reduct cfg="ABCDE" id="Glu"/>
+    </reaction>
+  </reactionnetwork>
+  <constraints>
+    <net>
+      <textual> AcCoaIn = 100.0 ; r8 = 50.0 ; r6a = 62.5 ; r4a-r4b = 0 ;r5a-r5b = 0 ; r6a-r6b = 0 ; r7a-r7b = 0 </textual>
+    </net>
+    <xch>
+      <textual>r1=0; r2=0; r4a=0 ; r5a=0 ; r7a=0 ; r4a-r4b = 0 ; r5a-r5b = 0 ; r6a-r6b = 0 ; r7a-r7b = 0 </textual>
+    </xch>
+  </constraints>
+  <configuration name="default" stationary="true">
+    <input pool="AcCoa0" type="isotopomer">
+      <label cfg="01">0.25</label>
+      <label cfg="11">0.25</label>
+      <label cfg="00">0.50</label>
+    </input>
+    <input pool="Asp" type="isotopomer">
+      <label cfg="0000">1.00</label>
+    </input>
+    <measurement>
+      <model>
+        <labelingmeasurement>
+          <group id="ms_group_1" scale="auto">
+            <textual>Glu[1,2,3,4,5]#M0,1,2,3,4,5</textual>
+          </group>
+        </labelingmeasurement>
+        <fluxmeasurement>
+          <netflux id="fm_1">
+            <textual>AcCoaIn</textual>
+          </netflux>
+          <netflux id="fm_2">
+            <textual>CO2out</textual>
+          </netflux>
+	  <netflux id="fm_3">
+            <textual>r8</textual>
+          </netflux>
+	  <netflux id="fm_4">
+            <textual>r3</textual>
+          </netflux>
+        </fluxmeasurement>
+      </model>
+      <data>
+        <datum id="fm_1" stddev="0.2">100.0</datum>
+        <datum id="fm_2" stddev="0.2">150.0</datum>
+        <datum id="fm_3" stddev="0.2">50.0</datum>
+        <datum id="fm_4" stddev="0.2">50.0</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="0">0.346</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="1">0.269</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="2">0.270</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="3">0.081</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="4">0.028</datum>
+        <datum id="ms_group_1" stddev="0.020" weight="5">0.006</datum>
+      </data>
+    </measurement>
+    <simulation method="auto" type="auto">
+      <variables>
+        <fluxvalue flux="r6a" type="xch">0.0</fluxvalue>
+      </variables>
+    </simulation>
+  </configuration>
+
+</fluxml>

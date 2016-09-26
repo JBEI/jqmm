@@ -1,0 +1,9 @@
+aacorr('3pg','3pg_c_1_2_3')=1;
+aacorr('dhap','dhap_c_1_2_3')=1;
+aacorr('fdp','fdp_c_1_2_3_4_5_6')=1;
+aacorr('mal-L','mal_L_c_1_2_3_4')=1;
+aacorr('pep','pep_c_1_2_3')=1;
+aacorr('pyr','pyr_c_1_2_3')=1;
+aacorr('r5p','r5p_c_1_2_3_4_5')=1;
+aacorr('ru5p-D','ru5p_D_c_1_2_3_4_5')=1;
+aacorr('s7p','s7p_c_1_2_3_4_5_6_7')=1;

@@ -1,0 +1,9 @@
+/ 
+'4mop_c'
+'aicar_c'
+'for_c'
+'glc_D_e'
+'leu_L_c'
+'pro_L_c'
+'urea_c'
+/ 

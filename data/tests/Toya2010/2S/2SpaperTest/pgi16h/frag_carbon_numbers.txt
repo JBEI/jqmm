@@ -1,0 +1,9 @@
+ncarbonsf('3pg')=3;
+ncarbonsf('dhap')=3;
+ncarbonsf('fdp')=6;
+ncarbonsf('mal-L')=4;
+ncarbonsf('pep')=3;
+ncarbonsf('pyr')=3;
+ncarbonsf('r5p')=5;
+ncarbonsf('ru5p-D')=5;
+ncarbonsf('s7p')=7;

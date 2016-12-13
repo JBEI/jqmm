@@ -18,6 +18,8 @@ This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt
 
 Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). Run first the "Quick tests" in notebook A0, and then choose tests from the other jupyter notebooks as desired.  
 
+A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation.
+
 ## License
 
 JBEI Quantitative Metabolic Modeling library (JQMM),

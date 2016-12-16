@@ -12,7 +12,7 @@ All code is illustrated in a variety of Jupyter notebook demos (see /jupyterNote
 
 Code can be found in the /code folder whereas data used for the demonstratiosn can be found in the /data folder.
 
-This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt.com/) licenses to work.
+This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt.com/) licenses to work. Jupyter notebooks have been created with GAMS Release: 24.5.4 r54492 LEX-LEG x86 64bit/Linux and CONOPT version 3.17A .
 
 ## Getting Started
 

@@ -1,0 +1,10 @@
+#!/bin/csh -f
+#
+# batch version of gams.
+# example of use:
+#    gamsbatch trnsport
+# log will be written to $1.log,
+#
+
+set basename=$1:r
+gams $* ll 1 lo 2 lf $basename.log &

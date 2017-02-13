@@ -14,7 +14,6 @@ RUN apt-get update \
 		wget \
 		vim \
 		man \
-		ipython \
 		python-tk \
 		pkg-config \
  		ipython \

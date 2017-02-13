@@ -1,0 +1,18 @@
+# git ignore file test
+*.DS_Store
+dockerContainer/gamslice.txt
+*.gdx*
+*.lst*
+# *.gms*
+matdata.gms
+matgdxdata.gms
+matglobs.gms
+matsol.gms
+# do track GAMS_EMU_MFA*.gms files as these are GAMS code
+# !GAMS_EMU_MFA*.gms
+*.m~
+\#*\#
+*.pyc
+*.txt~
+*.nfs*
+input.mat

@@ -16,7 +16,7 @@ RUN apt-get update \
 		man \
 		ipython \
 		python-tk \
-        pkg-config \
+		pkg-config \
  		ipython \
 		python-pip \ 
 		python-dev \
@@ -25,9 +25,9 @@ RUN apt-get update \
 		python-libxml2 \
 		python-lxml \
 		tcsh \
-        git \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+		git \
+	&& apt-get autoremove -y \
+	&& rm -rf /var/lib/apt/lists/*
 
 # install pip packages
 RUN pip install -U pip setuptools

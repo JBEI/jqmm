@@ -18,7 +18,7 @@ This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt
 
 Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). Run first the "Quick tests" in notebook A0, and then choose tests from the other jupyter notebooks as desired.  
 
-A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation.
+We also provide a Docker version of this library which automates the installation, including all required software prerequsites. To use the Docker version, first download and install Docker from https://www.docker.com, and then follow the jQMM docker instructions here: https://hub.docker.com/r/mhgarci1/jqmm/
 
 ## License
 

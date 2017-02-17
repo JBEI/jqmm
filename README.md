@@ -23,7 +23,7 @@ https://github.com/JBEI/jqmm/tree/master/dockerContainer.
 Library dependencies can be found in: 
 https://github.com/JBEI/jqmm/blob/master/dockerContainer/requirements.txt
 
-# Computational requirements
+## Computational requirements
 For optimal performance in solving large genome-scale models with jQMM we recommend a computer system with at least 32 cpu cores (64 bit), 32 GB or more of ram, and 32 GB of solid state disk storage. The absolute minimum requirements are 2 cpu cores (64 bit), 4 GB of ram, and 16 GB of disk storage.
 
 

@@ -38,6 +38,7 @@ docker exec -it jqmm bash -c 'cd /gams; yes 1 | ./gamsinst'
 ## 6) Stop container, restart interactively, and  manually open a browser to the url it suggests:
 
 docker stop jqmm
+
 docker start -i jqmm
 
 ## Optional

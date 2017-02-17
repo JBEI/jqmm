@@ -44,5 +44,7 @@ docker start -i jqmm
 To **completely uninstall jQMM** run the following three commands.
 
 docker stop jqmm
+
 docker rm jqmm
+
 docker rmi mhgarci1/jqmm

@@ -20,6 +20,7 @@ Clone this github repository and test the library by running the jupyter noteboo
 
 For ease of installation, a docker version of this library can be downloaded at:
 https://github.com/JBEI/jqmm/tree/master/dockerContainer. 
+
 Library dependencies can be found in: 
 https://github.com/JBEI/jqmm/blob/master/dockerContainer/requirements.txt
 

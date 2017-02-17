@@ -10,15 +10,15 @@ Specifically, the jQMM library provides tools for the following capabilities:
 
 All code is illustrated in a variety of Jupyter notebook demos (see /jupyterNotebooks folder) that enhance reproducibility and provide the capability to be modified by the user. A paper explaining the different capabilities is now in review, and a link to it will be posted as soon as it is published.
 
-Code can be found in the /code folder whereas data used for the demonstratiosn can be found in the /data folder.
+Code can be found in the /code folder whereas data used for the demonstrations can be found in the /data folder.
 
-This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt.com/) licenses to work. Jupyter notebooks have been created with GAMS Release: 24.5.4 r54492 LEX-LEG x86 64bit/Linux and CONOPT version 3.17A .
+This library requires GAMS (https://www.gams.com/), CPLEX (https://www-01.ibm.com/software/commerce/optimization/cplex-optimizer/) and CONOPT (http://www.conopt.com/) licenses to work. Jupyter notebooks have been created with GAMS Release: 24.5.4 r54492 LEX-LEG x86 64bit/Linux and CONOPT version 3.17A .
 
 ## Getting Started
 
-Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). Run first the "Quick tests" in notebook A0, and then choose tests from the other jupyter notebooks as desired.  
+Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). To check that everything is installed properly, run notebook B1, or the "Quick tests" in notebook A0. Then choose tests from the other jupyter notebooks as desired. 
 
-A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation.
+A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation. Library dependencies can be found in /dockerContainer/requirements.txt
 
 ## License
 

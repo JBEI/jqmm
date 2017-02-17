@@ -1,4 +1,9 @@
-# compile and upload docker container
+# Installing all jQMM dependencies using Docker (https://www.docker.com/)
+Docker provides a way to increase reproducibility in our results. Docker containers wrap a piece of sofware in a complete file system containing everything needed to run: code, systems libraries, systems tools and anything else that can be installed in a server. This guarantees that it will always run correctly adn in the same way, regardless fo the system environment it is running in. The jQMM docker container can be run on any server and any cloud computing serviced such as Amazon Web Services (AWS), Google Cloud Platform or Microsoft Azure. This container does NOT include GAMS, CPLEX or CONOPT licenses, which must be provided by the user.
+
+Here are the instructions for a jQMM installation through docker:
+
+## Compile and upload docker container
 docker build -t mhgarci1/jqmm:latest .
 docker login
 docker push mhgarci1/jqmm

@@ -5,8 +5,11 @@ Here are the instructions for a jQMM installation through docker:
 
 ## 1) Compile and upload docker container
 docker build -t mhgarci1/jqmm:latest .
+
 docker login
+
 docker push mhgarci1/jqmm
+
 
 See https://github.com/JBEI/jqmm for license, source code, and instructions.
 

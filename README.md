@@ -18,7 +18,7 @@ This library requires GAMS (https://www.gams.com/), CPLEX (https://www-01.ibm.co
 
 Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). To check that everything is installed properly, run notebook B1, or the "Quick tests" in notebook A0. Then choose tests from the other jupyter notebooks as desired. 
 
-A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation. Library dependencies can be found in /dockerContainer/requirements.txt
+For ease of installation, a docker version of this library can be downloaded at https://github.com/JBEI/jqmm/tree/master/dockerContainer. Library dependencies can be found in /dockerContainer/requirements.txt
 
 ## License
 

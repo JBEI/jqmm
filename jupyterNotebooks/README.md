@@ -1,4 +1,4 @@
-# Jupyter Notebook
+# Jupyter Notebooks
 
 Jupyter notebooks (http://jupyter.org/) provide computable appendices that interactively demonstrate the funcionality of the jQMM library.
 

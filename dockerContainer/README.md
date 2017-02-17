@@ -12,7 +12,7 @@ See https://github.com/JBEI/jqmm for license, source code, and instructions.
 
 The following instructions explain how to launch a jQMM docker container once it is uploaded.
 
-jQMM uses the General Algebraic Modeling System (GAMS), and requires a valid GAMS license for solving all but the simplest models. Place your license file (which must be named "gamslice.txt") in the current folder before following these instructions. You can purchase a license here: https://www.gams.com/
+jQMM uses the General Algebraic Modeling System (GAMS), and **requires a valid GAMS license** for solving all but the simplest models. Place your license file (which must be named "gamslice.txt") in the current folder before following these instructions. You can purchase a license here: https://www.gams.com/
 
 ## 2) Launch container:
 

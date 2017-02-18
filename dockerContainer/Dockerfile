@@ -44,6 +44,13 @@ RUN git clone https://github.com/JBEI/jqmm.git \
     && mkdir -p /scratch/hgmartin_scratch/tests \ 
     && ln -s /root/jqmm /users/hgmartin/libraries/quantmodel
 
+# install svgfig
+RUN git clone https://github.com/jpivarski/svgfig.git \
+    && cd svgfig/svgfig-1.x \
+    && python setup.py install \
+    && cd \
+    && rm -rf svgfig
+
 # Add Tini
 ENV TINI_VERSION v0.14.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini

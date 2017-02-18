@@ -10,15 +10,23 @@ Specifically, the jQMM library provides tools for the following capabilities:
 
 All code is illustrated in a variety of Jupyter notebook demos (see /jupyterNotebooks folder) that enhance reproducibility and provide the capability to be modified by the user. A paper explaining the different capabilities is now in review, and a link to it will be posted as soon as it is published.
 
-Code can be found in the /code folder whereas data used for the demonstratiosn can be found in the /data folder.
+Code can be found in the /code folder whereas data used for the demonstrations can be found in the /data folder.
 
-This library requires GAMS (https://www.gams.com/) and CONOPT (http://www.conopt.com/) licenses to work. Jupyter notebooks have been created with GAMS Release: 24.5.4 r54492 LEX-LEG x86 64bit/Linux and CONOPT version 3.17A .
+This library requires GAMS (https://www.gams.com/), CPLEX (https://www-01.ibm.com/software/commerce/optimization/cplex-optimizer/) and CONOPT (http://www.conopt.com/) licenses to work. Jupyter notebooks have been created with GAMS Release: 24.5.4 r54492 LEX-LEG x86 64bit/Linux and CONOPT version 3.17A .
 
 ## Getting Started
 
-Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). Run first the "Quick tests" in notebook A0, and then choose tests from the other jupyter notebooks as desired.  
+Clone this github repository and test the library by running the jupyter notebooks (http://jupyter.org/). To check that everything is installed properly, run notebook B1, or the "Quick tests" in notebook A0. Then choose tests from the other jupyter notebooks as desired. 
 
-A docker version of this library can be downloaded at https://github.com/JBEI/jqmm-docker, for ease of installation.
+For ease of installation, a docker version of this library can be downloaded at:
+https://github.com/JBEI/jqmm/tree/master/dockerContainer. 
+
+Library dependencies can be found in: 
+https://github.com/JBEI/jqmm/blob/master/dockerContainer/requirements.txt
+
+## Computational requirements
+For optimal performance in solving large genome-scale models with jQMM we recommend a computer system with at least 32 cpu cores (64 bit), 32 GB or more of ram, and 32 GB of solid state disk storage. The absolute minimum requirements are 2 cpu cores (64 bit), 4 GB of ram, and 16 GB of disk storage.
+
 
 ## License
 

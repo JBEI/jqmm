@@ -3,20 +3,6 @@ Docker provides a way to **increase reproducibility** for our jQMM results. Dock
 
 Here are the instructions for a jQMM installation through docker:
 
-## 1) Compile and upload docker container
-docker build -t mhgarci1/jqmm:latest .
-
-docker login
-
-docker push mhgarci1/jqmm
-
-
-See https://github.com/JBEI/jqmm for license, source code, and instructions.
-
-The following instructions explain how to launch a jQMM docker container once it is uploaded.
-
-jQMM uses the General Algebraic Modeling System (GAMS), and **requires a valid GAMS license** for solving all but the simplest models. Place your license file (which must be named "gamslice.txt") in the current folder before following these instructions. You can purchase a license here: https://www.gams.com/
-
 ## 1) Launch container:
 
 docker run --name jqmm -p 8888:8888 -d mhgarci1/jqmm
@@ -42,10 +28,20 @@ docker stop jqmm
 docker start -i jqmm
 
 ## Optional
-To **completely uninstall jQMM** run the following three commands.
+### To **completely uninstall jQMM** run the following three commands.
 
 docker stop jqmm
 
 docker rm jqmm
 
 docker rmi mhgarci1/jqmm
+
+### To build the docker image locally (only for mhgarci1 docker account owner)
+
+docker build -t mhgarci1/jqmm:latest .
+
+docker login
+
+docker push mhgarci1/jqmm
+
+

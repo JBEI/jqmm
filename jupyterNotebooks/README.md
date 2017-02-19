@@ -1,6 +1,6 @@
 # Jupyter Notebooks
 
-Jupyter notebooks (http://jupyter.org/) provide computable appendices that interactively demonstrate the funcionality of the jQMM library.
+Jupyter notebooks (http://jupyter.org/) provide computable appendices that interactively demonstrate the funcionality of the jQMM library. Please allow for at least 16Gb of storage for notebooks A0, A4 and B4 to run properly. 
 
 We provide them in two forms: (1) .ipynb files that represent the actual computable notebook and (2) .html files that provide a quick look at the results. 
 
@@ -12,7 +12,7 @@ B2: http://htmlpreview.github.io/?https://github.com/JBEI/jqmm/blob/master/jupyt
 
 B3: http://htmlpreview.github.io/?https://github.com/JBEI/jqmm/blob/master/jupyterNotebooks/B3%20Toya%20data%2013C%20MFA%20.html
 
-B4: http://htmlpreview.github.io/?https://github.com/JBEI/jqmm/blob/master/jupyterNotebooks/B5%20PCAP%20example.html
+B5: http://htmlpreview.github.io/?https://github.com/JBEI/jqmm/blob/master/jupyterNotebooks/B5%20PCAP%20example.html
 
 
 A1: http://htmlpreview.github.io/?https://github.com/JBEI/jqmm/blob/master/jupyterNotebooks/A1%20core%20module%20notebook.html

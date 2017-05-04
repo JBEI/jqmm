@@ -1,6 +1,12 @@
 # JBEI Quantitative Metabolic Modeling (jQMM) Library
 
-The jQMM library is an open-source, python-based library for bioengineering. The jQMM library provides tools for modeling internal metabolic fluxes and leveraging other 'omics data for metabolic engineering for the production of biofuels and other purposes. It is intended to facilitate the design and metabolic engineering of organisms for biofuels and other chemicals, as well as investigations of cellular metabolism and ’omics data leveraging.  As an open source software project, JBEI hopes it will attract additions from the community and grow with the rapidly changing field of metabolic flux analysis.
+The jQMM library is an open-source, python-based library for bioengineering. The jQMM library provides tools for modeling internal metabolic fluxes and leveraging other 'omics data for metabolic engineering for the production of biofuels and other purposes. 
+
+You can find the paper describing the jQMM library here:
+
+https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1615-y
+
+It is intended to facilitate the design and metabolic engineering of organisms for biofuels and other chemicals, as well as investigations of cellular metabolism and ’omics data leveraging.  As an open source software project, JBEI hopes it will attract additions from the community and grow with the rapidly changing field of metabolic flux analysis.
 
 Specifically, the jQMM library provides tools for the following capabilities:
 

@@ -30,7 +30,7 @@ class NamedRangedNumber(object):
                     self.names.append(n)
             self.canonicalName = names[0]
         else:
-            raise Exception('Argument 1 must be a string or a list of strings')
+            raise ValueError('Argument 1 must be a string or a list of strings')
         self.set(value)
 
 
@@ -39,7 +39,7 @@ class NamedRangedNumber(object):
             if name not in self.names:
                 self.names.append(name)
         else:
-            raise Exception('Name to add must be a string.')
+            raise ValueError('Name to add must be a string.')
 
 
     def set(self, value=None):
@@ -87,6 +87,7 @@ class NamedRangedNumber(object):
             v = self.value + other
         return NamedRangedNumber(self.names, v)
 
+
     def __sub__(self, other):
         "NamedRangedNumber value subtraction."
         if isinstance(other, NamedRangedNumber):
@@ -133,6 +134,7 @@ class NamedRangedNumber(object):
                 return False
         return True
 
+
     def add(self, other):
         "NamedRangedNumber value addition."
         if isinstance(other, NamedRangedNumber):
@@ -140,6 +142,7 @@ class NamedRangedNumber(object):
         else:
             # We're assuming that rangedNumber can handle any other input we pass it
             self.value = self.value + other
+
 
     def sub(self, other):
         "NamedRangedNumber value subtraction."
@@ -165,10 +168,17 @@ class NamedRangedNumber(object):
             self.value = self.value / other
 
 
+    def mergeValues(self,other):
+        "NamedRangedNumber merge method, for use in subclasses."
+        if self.value is None:
+            self.value = other.value
+
+
 
 class NamedRangedNumberSet(object):
     """
-    Class for a set of NamedRangedNumber objects, with routines to deal with duplicates and generate a
+    Class for a set of NamedRangedNumber objects (or objects derived from NamedRangedNumber),
+    with routines to deal with duplicates and generate a
     string suitable for printing and embedding in SBML notes.
     """
 
@@ -202,7 +212,7 @@ class NamedRangedNumberSet(object):
         return True
 
 
-    def recastItems(self, contents, preferExistingObjects=True, preferExistingValues=False):
+    def recastItems(self, contents, preferExistingObjects=True, mergeValues=False):
         """
         This method is used to add a list of items to the set, and to remake the given list of items using the merged
         contents of the set and the list. Some examples will help.
@@ -219,11 +229,8 @@ class NamedRangedNumberSet(object):
         addedOrFoundItems = []
         if contents is None:
             return addedOrFoundItems
-        if isinstance(contents, NamedRangedNumber):
-            contents = [contents]
-        # If it's not a list at this point, bail.
         if not isinstance(contents, list):
-            return addedOrFoundItems
+            contents = [contents]
         itemsToRemove = []
         itemsToAdd = []
         for i in contents:
@@ -245,16 +252,16 @@ class NamedRangedNumberSet(object):
                     mergedNames[n] = 1
                 mergedNameList = mergedNames.keys()
                 if preferExistingObjects:
-                    if not preferExistingValues:
-                        collision.value = i.value
+                    if mergeValues:
+                        collision.mergeValues(i)
                     # Make sure that the currently existing NamedRangedNumber can be referenced by
                     # all the names of the colliding one as well.
                     for n in i.names:
                         self.contentsDict[n] = collision
                     addedOrFoundItems.append(collision)
                 else:
-                    if preferExistingValues:
-                        i.value = collision.value
+                    if mergeValues:
+                        i.mergeValues(collision)
                     # Make sure that the colliding NamedRangedNumber can be referenced by
                     # all its names as well as the names of the one currently existing.
                     for n in mergedNameList:
@@ -321,6 +328,21 @@ class NamedRangedNumberSet(object):
         return ' or '.join(map(str, nonEmptySets))
 
 
+    @staticmethod
+    def createNameArraysFromSets(sets):
+        nonEmptySets = [i for i in sets if not i.isEmpty()]
+        return [i.asNameArray() for i in nonEmptySets]
+
+
+    def asNameArray(self):
+        if len(self.contentsList) > 1:
+            return [i.canonicalName for i in self.contentsList]
+        elif len(self.contentsList) == 1:
+            return [self.contentsList[0].canonicalName]
+        else:
+            return []
+
+
     def __str__(self):
         if len(self.contentsList) > 1:
             return '(' + ' and '.join(map(str, self.contentsList)) + ')'
@@ -329,6 +351,9 @@ class NamedRangedNumberSet(object):
         else:
             return ''
 
+
+    def __len__(self):
+        return len(self.contentsList)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ information are compatible.
 """
 
 
-import core, GAMSclasses, ReactionNetworks
+import core, GAMSclasses
 import math, copy, re
 import numpy
 import utilities as utils
@@ -1621,9 +1621,8 @@ class AtomTransitionList:
         #  Storing carbon transitions type as model note
         notes = {}
 
-       # Returning reaction network
-        reactionNetwork = ReactionNetworks.C13ReactionNetwork( (name, notes, metList, reactionList) )
-        return reactionNetwork
+        # Returning reaction network
+        return (name, notes, metList, reactionList)
     
     
     def findEMUTransitions2Source(self,emu,sources,cleanCache=False):

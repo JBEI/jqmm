@@ -7,8 +7,7 @@ This module contains all the methods used to treat labeling data (i.e. Mass Dist
 
 import re
 import numpy, random
-import DB
-import utilities as utils
+import core
 
 
 ##################################
@@ -379,7 +378,7 @@ def getStdAlias(name):
     """
         
     aliases        = genAliases(name)
-    fragDictBasic_ = DB.fragDictBasic()
+    fragDictBasic_ = core.getLabelFragDict()
     presenceVector = [i in fragDictBasic_ for i in aliases]  # Vector with presence or absence for each alias
     if sum(presenceVector)>0:                                # checks if any of the aliases is in fragDictBasic keys
         newName = aliases[presenceVector.index(True)]        # Abbreviation name present in fragDictBasic
@@ -430,7 +429,7 @@ def createGammaMatrix(distleng,string): # TODO: find a better place for this
         }
 
     # Getting atom species and number
-    atoms    = utils.getAtoms(string)
+    atoms    = getAtoms(string)
 
     # Initialization
     gammatot = numpy.eye(distleng)
@@ -453,4 +452,25 @@ def createGammaMatrix(distleng,string): # TODO: find a better place for this
 
     return gammatot
 
+
+def getAtoms(string):
+    """
+    Extracts symbols and number from a string representing elemental composition
+    
+    For example:
+        getAtoms('H6NO2Si') = [('H', 6), ('N', 1), ('O', 2), ('Si', 1)]
+    
+    """
+    comps = re.findall('[A-Z][a-z]*\d*',string)
+    atoms = []
+    for comp in comps:
+        symbol = re.match('([a-zA-Z]+)',comp).group(1)
+        numberst = comp.lstrip(symbol)
+        if numberst == '':
+            number = 1
+        else:
+            number = int(numberst)
+        AtTuple= symbol,number 
+        atoms.append(AtTuple)
+    return atoms    
 

@@ -5,6 +5,7 @@
 import re
 import core
 import NamedRangedNumber
+from SBMLResourceIdentifiers import SBMLResourceIdentifiers
 
 
 class Protein(NamedRangedNumber.NamedRangedNumber):
@@ -22,16 +23,46 @@ class Protein(NamedRangedNumber.NamedRangedNumber):
             nameList = names
         else:
             nameList = [names]
-
         for name in nameList:
-            assert ' ' not in name.strip(), "Protein names cannot contain spaces: '" + name + "'"
+            if ' ' in name.strip():
+                raise ValueError("Protein names cannot contain spaces: '%s'" % name)
+
+        self.label = None
+        self.sbo = None
+        self.identifiers = SBMLResourceIdentifiers()
+        self.encodedBy = []
+        # For use when this is an unknown/unnamed protein linking a gene to a reaction.
+        # The name is copied from the gene in that case, and this flag is set.
+        self.nonCanonicalName = False
         super(Protein, self).__init__(names, value)
 
 
     def addName(self, name):
-        assert ' ' not in name.strip(), "Protein names cannot contain spaces: '" + name + "'"
+        if ' ' in name.strip():
+            raise ValueError("Protein names cannot contain spaces: '%s'" % name)
         super(Protein, self).addName(name)
 
+
+    def addIdentifier(self, urls):
+        self.identifiers.add(urls)
+
+
+    def mergeValues(self,other):
+        "Merge the contents of other into this instance."
+        super(Protein, self).mergeValues(other)
+        if self.label is None:
+            self.label = other.label
+        if self.sbo is None:
+            self.sbo = other.sbo
+        if self.identifiers is None:
+            self.identifiers = other.identifiers
+        # The sensible behavior for an encodedBy set would be to merge it.
+        # We could attempt this, but it would require making assumptions about the Gene objects
+        # within that we cannot make.  So instead, we'll just check to see if there is NO set in the
+        # target Protein, and carry the old set along if so.
+        # (FWIW, this solves our immediate issue with the old vs. new SBML import methods.)
+        if len(self.encodedBy) < 1:
+            self.encodedBy = other.encodedBy
 
 
 class ProteinSet(NamedRangedNumber.NamedRangedNumberSet):
@@ -42,9 +73,9 @@ class ProteinSet(NamedRangedNumber.NamedRangedNumberSet):
         super(ProteinSet, self).__init__(contents)
 
 
-    def recastSet(self, victimSet, preferExistingObjects=True, preferExistingValues=False):
+    def recastSet(self, victimSet, preferExistingObjects=True, mergeValues=False):
         itemsToRecast = victimSet.contentsList
-        recastItems = self.recastItems(itemsToRecast, preferExistingObjects, preferExistingValues)
+        recastItems = self.recastItems(itemsToRecast, preferExistingObjects, mergeValues)
         return ProteinSet(recastItems)
 
 
@@ -82,7 +113,6 @@ class ProteinSet(NamedRangedNumber.NamedRangedNumberSet):
           This string, if supplied, is meant to supply alternate names for the names given in structureString.
         It should have the same structure - including 'and' and 'or' components and parenthesis - so it can provide a
         1-to-1 correspondence when walked along in linear fashion.
-
         """
 
         givenValues = {}
@@ -133,11 +163,7 @@ class ProteinSet(NamedRangedNumber.NamedRangedNumberSet):
 
 
 
-if __name__ == "__main__":
-    test()
-
 def test():
-
     try:
         vError = False
         print "Instantiating from illegal string \"test=[2,3,4]\", expecting failure ..."
@@ -165,9 +191,9 @@ def test():
     try:
         aError = False
         proteinSets = ProteinSet.createSetsFromStrings(strA)
-    except AssertionError:
+    except ValueError:
         aError = True
-        print "\tGot AssertionError as expected."
+        print "\tGot ValueError as expected."
         pass
     assert aError, "ProteinSet.createSetsFromStrings accepted wrong input."
 
@@ -206,18 +232,23 @@ def test():
 
     masterSet = ProteinSet()
     newSubSets = []
-    print "Master set:"
     for subSet in subSets:
         newSubSets.append(masterSet.recastSet(subSet))
+    print "Master set:"
     print "\t" + str(masterSet)
     print "Subsets consolidated, for embedding:"
     print "\t" + ProteinSet.createStringFromSets(newSubSets)
+    print "Adding identifiers:"
+    a.addIdentifier([ "http://identifiers.org/ncbigi/GI:16130343",
+            "http://identifiers.org/ncbigene/946880",
+            "http://identifiers.org/asap/ABE-0007971"])
+    a.addIdentifier("http://identifiers.org/ecogene/EG10165")
+    print "Expecting to find 'ncbigi' identifier with 'GI:16130343':"
+    print a.identifiers.dict
+    assert 'ncbigi' in a.identifiers.dict, "Key not found."
+    assert a.identifiers.dict['ncbigi'] == 'GI:16130343', "Value is incorrect."
 
 
-
-
-
-
-
-
+if __name__ == "__main__":
+    test()
 

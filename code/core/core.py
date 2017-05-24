@@ -4,15 +4,13 @@
 
 import re, copy, numpy, math, string, unittest
 import enhancedLists, Genes, Proteins, DB
+from SBMLResourceIdentifiers import SBMLResourceIdentifiers
 import utilities as utils
 
 
 "##################################"
 " METABOLITES, REACTIONS AND EMUS"
 "##################################"
-
-# List of allowed compartment types stored in DB
-compartments = DB.getCompartmentDict() 
 
 # Used to set upper and lower bounds on fluxes.
 # These values are used when the bound is declared to be present by SBML markup,
@@ -40,10 +38,11 @@ class Metabolite():
         -) full_name: full name, e.g. L-alanine for ala-L[c]
         -) formula: composition formula, e.g C3H7NO2 for ala-L[c]
         -) extraNotes: extra notes information
+        -) identifiers: an optional SBMLResourceIdentifiers object
     """
  
-    def __init__(self, name, ncarbons=0, excluded=False, source=False, feed='none', destination=False, carbonsOut=None, bval=0, full_name=None,
-                 formula='', extraNotes=None):
+    def __init__(self, name, ncarbons=0, excluded=False, source=False, feed='none', destination=False, carbonsOut=None,
+                 bval=0, full_name=None, formula='', extraNotes=None, identifiers=None):
 
         self.name = name
         if isinstance(name, MetaboliteName):
@@ -67,6 +66,10 @@ class Metabolite():
         if full_name is not None:
             if full_name.strip() != '':
                 self.full_name = full_name
+        if identifiers != None:
+            self.identifiers  = identifiers
+        else:
+            self.identifiers = SBMLResourceIdentifiers()
         self.formula     = formula
 
 
@@ -148,17 +151,21 @@ class Reaction():
         -) gene: gene(s) associated to reaction
         -) protein: protein(s) associated to reaction
         -) extraNotes: extra notes associated to reaction
-        
+        -) identifiers: an optional SBMLResourceIdentifiers object
+        -) full_name: full name, e.g. Fructoselysine 3-epimerase for FRULYSE
     """
     def __init__(self, name, reversible=False, suggested=False, measured=False, flux='None', fluxBounds='None',
                  transitionLine='None', exchange=False, reactants='default', products='default', cval='default', 
-                 subsystem='None', gene=None, protein=None, extraNotes=None):
+                 subsystem='None', gene=None, protein=None, extraNotes=None, identifiers=None, full_name=None):
         self.name = name
+        self.full_name = name
+        if full_name is not None:
+            if full_name.strip() != '':
+                self.full_name = full_name
+
         self.reversible = reversible
         self.suggested  = suggested
         self.measured   = measured
-        self.extraNotes = extraNotes if extraNotes != None else {}
-
 
         if flux != 'None':
             self.flux = flux
@@ -179,6 +186,13 @@ class Reaction():
 
         self.setGenes(gene)
         self.setProteins(protein)
+
+        self.extraNotes = extraNotes if extraNotes != None else {}
+
+        if identifiers != None:
+            self.identifiers  = identifiers
+        else:
+            self.identifiers = SBMLResourceIdentifiers()
 
 
     @classmethod
@@ -452,6 +466,9 @@ class MetaboliteName(str):
     but m.std will then contain the nonsensical "12ppd--S[e]". """
     
     def __new__(cls, name):
+        # List of allowed compartment types stored in DB
+        compartments = DB.getCompartmentDict()
+
         # Find out what type of name it is and move to SBML format
         defaultCompartment = 'c'
 
@@ -618,6 +635,23 @@ class EMU(): # TODO(Hector): redo, holding the Metabolite instance?
         self.name = newname
         self.getMetName()
         return newname  
+
+
+# Moved up out of DB because using EMU inside DB created a circular dependency
+def getLabelFragDict():
+    allFragments = DB.getFragDictBasic()
+    labelFragDict = {}
+    for frag in allFragments:
+        # Converting names to SBML standard
+        emu         = EMU(frag.emu)
+        #emu.convNameComp2Std()
+        #frag.emu    = emu.convNameStd2SBML()
+        frag.emu    = emu.getEmuInSBML()
+
+        # Creating dictionary
+        labelFragDict[frag.abbrev]    = frag
+
+    return labelFragDict
 
 
 
@@ -1204,7 +1238,8 @@ class rangedNumber:
     """
 
     def __init__(self, lo, best, hi):
-        assert utils.is_float(best), '"best" value must be interpretable as a number'
+        if not utils.is_float(best):
+            raise ValueError("'best' value must be interpretable as a number: '%s'" % best)
         self.best = float(best)
         if utils.is_float(lo):
             self.lo = float(lo)

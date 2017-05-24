@@ -826,7 +826,7 @@ def get13CMFAresults(strain):
     FLUXESFreefilename  = dirDATA + 'FLUX'+strain+'.txt'
 
     atomTransitions = enhancedLists.AtomTransitionList(REACTIONSfilename)
-    reactionNetwork = atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA')
+    reactionNetwork = ReactionNetworks.C13ReactionNetwork(atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA'))
     reactionNetwork.addLabeling(CEMSfilename,'LCMSLabelData',CEMSSTDfilename,minSTD=0.001)
     reactionNetwork.addFeed(FEEDfilename)
     reactionNetwork.loadFluxBounds(FLUXESFreefilename)

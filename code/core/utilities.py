@@ -6,7 +6,7 @@ Set of utilities used in the rest of the JQMM library
 """
 
 import re, os
-import core, DB
+import core, MetaboliteFormulaDictionary
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 from pylab import figure, plot, xlabel, ylabel, title, text, savefig
@@ -94,28 +94,6 @@ def indexMap(inds,prodLabel,reactLabel):
     success = True if indR else False
 
     return success,(indP,indR)
-
-
-def getAtoms(string):
-    """
-    Extracts symbols and number from a string representing elemental composition
-    
-    For example:
-        getAtoms('H6NO2Si') = [('H', 6), ('N', 1), ('O', 2), ('Si', 1)]
-    
-    """
-    comps = re.findall('[A-Z][a-z]*\d*',string)
-    atoms = []
-    for comp in comps:
-        symbol = re.match('([a-zA-Z]+)',comp).group(1)
-        numberst = comp.lstrip(symbol)
-        if numberst == '':
-            number = 1
-        else:
-            number = int(numberst)
-        AtTuple= symbol,number 
-        atoms.append(AtTuple)
-    return atoms    
 
 
 def eraseFilesIn(dirname):     # TODO: check if this is needed anymore, substitute by os function?
@@ -306,7 +284,7 @@ def getCarbonDict(reactionList):  # TODO: Eliminate?
     """
         Provides carbon dictionary out of the formula dictionary kept in the base directory
     """
-    formulaDict = DB.getFormulaDict()
+    formulaDict = MetaboliteFormulaDictionary.formulaDict
 
     carbonDict={}
     reacDict = reactionList.getReactionDictionary()

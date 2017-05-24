@@ -9,7 +9,8 @@ for their particular information requirements.
 """
 
 import os, re, numpy, random
-import GAMSclasses, core, DB, enhancedLists, labeling, sbmlio
+import GAMSclasses, core, DB, enhancedLists, labeling
+from sbmlio import (SBMLImporter, SBMLExporter)
 import utilities as utils
 
 
@@ -33,6 +34,11 @@ class ReactionNetwork:
         self.notes        = {}
         self.metList      = []
         self.reactionList = []
+
+        # There are not assumed to be a standard part of a ReactionNetwork,
+        # so they are left uninitialized until used.
+        self.proteinSet   = None
+        self.geneSet      = None
 
         errorCount = 0
         logStrings = []
@@ -62,12 +68,15 @@ class ReactionNetwork:
         # If not, we do one more test to see if we were given a tuple suitable for unpacking directly into ReactionNetwork parts.
         if isinstance(sbmlFileContents, basestring):
             if sbmlFileContents.strip() != '':
-                sbmlImporter = sbmlio.SBMLImporter(sbmlFileContents)
+                sbmlImporter = SBMLImporter(sbmlFileContents)
 
                 self.name         = sbmlImporter.model_name
                 self.notes        = sbmlImporter.model_notes
                 self.metList      = sbmlImporter.metList
                 self.reactionList = sbmlImporter.reactionList
+
+                self.proteinSet   = sbmlImporter.proteinSet
+                self.geneSet      = sbmlImporter.geneSet
 
                 self.errorCount   = sbmlImporter.errorCount
                 self.logStrings   = sbmlImporter.logStrings
@@ -272,7 +281,7 @@ class ReactionNetwork:
         if fileName == 'toString':
             return self.getSBMLString()
         else:
-            sbmlExporter = sbmlio.SBMLExporter(self)
+            sbmlExporter = SBMLExporter(self)
             return sbmlExporter.writeSBMLToFile(fileName)
 
 
@@ -280,7 +289,7 @@ class ReactionNetwork:
         """
         Shortcut call
         """
-        sbmlExporter = sbmlio.SBMLExporter(self)
+        sbmlExporter = SBMLExporter(self)
         return sbmlExporter.getSBMLString()
 
 
@@ -517,7 +526,7 @@ class C13ReactionNetwork(ReactionNetwork):
         Produces dictionary of fragments to be fit
         """
         # ## Getting basic dictionary
-        fragDictBasic = DB.fragDictBasic()
+        fragDictBasic = core.getLabelFragDict()
         
         # ## Creating GCMS, CEMS and LCMS Dictionaries 
         GCMS = self.notes['GCMSLabelData'] if 'GCMSLabelData' in self.notes else []        
@@ -1419,7 +1428,7 @@ class testC13RN(unittest.TestCase):
          REACTIONSfilename   = self.dirBase+'REACTIONStca.txt' 
            
          atomTransitions = enhancedLists.AtomTransitionList(REACTIONSfilename)
-         self.reactionNetwork = atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA')
+         self.reactionNetwork = C13ReactionNetwork(atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA'))
 
 
     def testAddFeedLabel(self):

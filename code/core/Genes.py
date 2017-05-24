@@ -5,6 +5,7 @@
 import re
 import core
 import NamedRangedNumber
+from SBMLResourceIdentifiers import SBMLResourceIdentifiers
 
 
 class Gene(NamedRangedNumber.NamedRangedNumber):
@@ -22,15 +23,28 @@ class Gene(NamedRangedNumber.NamedRangedNumber):
             nameList = names
         else:
             nameList = [names]
-
         for name in nameList:
-            assert ' ' not in name.strip(), "Gene names cannot contain spaces: '" + name + "'"
+            if ' ' in name.strip():
+                raise ValueError("Gene names cannot contain spaces: '%s'" % name)
+        self.identifiers = SBMLResourceIdentifiers()
         super(Gene, self).__init__(names, value)
 
 
     def addName(self, name):
-        assert ' ' not in name.strip(), "Gene names cannot contain spaces: '" + name + "'"
+        if ' ' in name.strip():
+            raise ValueError("Gene names cannot contain spaces: '%s'" % name)
         super(Gene, self).addName(name)
+
+
+    def addIdentifier(self, urls):
+        self.identifiers.add(urls)
+
+
+    def mergeValues(self,other):
+        "Merge the contents of other into this instance."
+        super(Gene, self).mergeValues(other)
+        if self.identifiers is None:
+            self.identifiers = other.identifiers
 
 
 
@@ -42,9 +56,9 @@ class GeneSet(NamedRangedNumber.NamedRangedNumberSet):
         super(GeneSet, self).__init__(contents)
 
 
-    def recastSet(self, victimSet, preferExistingObjects=True, preferExistingValues=False):
+    def recastSet(self, victimSet, preferExistingObjects=True, mergeValues=False):
         itemsToRecast = victimSet.contentsList
-        recastItems = self.recastItems(itemsToRecast, preferExistingObjects, preferExistingValues)
+        recastItems = self.recastItems(itemsToRecast, preferExistingObjects, mergeValues)
         return GeneSet(recastItems)
 
 
@@ -145,9 +159,9 @@ def test():
     try:
         aError = False
         geneSets = GeneSet.createSetsFromStrings(strA)
-    except AssertionError:
+    except ValueError:
         aError = True
-        print "\tGot AssertionError as expected."
+        print "\tGot ValueError as expected."
         pass
     assert aError, "GeneSet.createSetsFromStrings accepted wrong input."
 

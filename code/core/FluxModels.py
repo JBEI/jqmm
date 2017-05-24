@@ -550,7 +550,7 @@ class C13Model(FluxModel):
         
         regexp = re.compile('(\D+)(\d+)')
 
-        fragDictBasic = DB.fragDictBasic()
+        fragDictBasic = core.getLabelFragDict()
         GCMS = {}
         LCMS = {}
         CEMS = {}
@@ -2229,7 +2229,7 @@ class C13MFAtests(unittest.TestCase):
         FLUXESFreefilename  = dirDATA+'FLUXtca.txt'
 
         atomTransitions = enhancedLists.AtomTransitionList(REACTIONSfilename)
-        reactionNetwork = atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA')
+        reactionNetwork = ReactionNetworks.C13ReactionNetwork(atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA'))
 
         reactionNetwork.addLabeling(CEMSfilename,'LCMSLabelData',CEMSSTDfilename,minSTD=0.001)
         reactionNetwork.addFeed(FEEDfilename)
@@ -2250,7 +2250,7 @@ class C13MFAtests(unittest.TestCase):
         FLUXESFreefilename  = dirDATA + 'FLUX'+strain+'.txt'
 
         atomTransitions = enhancedLists.AtomTransitionList(REACTIONSfilename)
-        reactionNetwork = atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA')
+        reactionNetwork = ReactionNetworks.C13ReactionNetwork(atomTransitions.getReactionNetwork('E. coli wt5h 13C MFA'))
         reactionNetwork.addLabeling(CEMSfilename,'LCMSLabelData',CEMSSTDfilename,minSTD=0.001)
         reactionNetwork.addFeed(FEEDfilename)
         reactionNetwork.loadFluxBounds(FLUXESFreefilename)
@@ -2270,6 +2270,7 @@ class C13MFAtests(unittest.TestCase):
         self.assertTrue('Exp:' +str(results.fragDict['Glu'].mdv) == 'Exp:[ 0.346  0.269  0.27   0.081  0.028  0.004]')
         self.assertTrue(str(results.reactionNetwork.reactionList.printFluxes(fileName='toString',brief="False")) == 
         'co2Out: \t150.0\nr6: \t125.0\nr1: \t100.0\nr2: \t100.0\nr7: \t75.0\nr4: \t50.0\nr5: \t50.0\nr3: \t50.0\nr8: \t50.0')
+
 
     def testToya2010(self):
         """ Checks results using Toya 2010 data"""

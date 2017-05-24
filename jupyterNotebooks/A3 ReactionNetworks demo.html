@@ -1262,7 +1262,7 @@ Exchange: NA
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">atomTransitions</span> <span class="o">=</span> <span class="n">enhancedLists</span><span class="o">.</span><span class="n">AtomTransitionList</span><span class="p">(</span><span class="n">REACTIONSfilename</span><span class="p">)</span>
-<span class="n">ReacNet</span> <span class="o">=</span> <span class="n">atomTransitions</span><span class="o">.</span><span class="n">getReactionNetwork</span><span class="p">(</span><span class="s1">&#39;E. coli wt5h 13C MFA&#39;</span><span class="p">)</span>
+<span class="n">ReacNet</span> <span class="o">=</span> <span class="n">ReactionNetworks</span><span class="o">.</span><span class="n">C13ReactionNetwork</span><span class="p">(</span><span class="n">atomTransitions</span><span class="o">.</span><span class="n">getReactionNetwork</span><span class="p">(</span><span class="s1">&#39;E. coli wt5h 13C MFA&#39;</span><span class="p">)</span><span class="p">)</span>
 
 <span class="n">ReacNet</span><span class="o">.</span><span class="n">addLabeling</span><span class="p">(</span><span class="n">CEMSfilename</span><span class="p">,</span><span class="s1">&#39;LCMSLabelData&#39;</span><span class="p">,</span><span class="n">CEMSSTDfilename</span><span class="p">,</span><span class="n">minSTD</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 <span class="n">ReacNet</span><span class="o">.</span><span class="n">addFeed</span><span class="p">(</span><span class="n">FEEDfilename</span><span class="p">)</span>

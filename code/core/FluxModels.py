@@ -751,7 +751,7 @@ class TwoSC13Model(C13Model):
         assert len(C13ReactionList.reactions) > 0, "No core reactions included"        
 
 
-    def findFluxesStds(self,Nrep=20,Nrand=5,erase=True,labelMin=0.99,fluxLimit=[0,0.05,0.2],limitFlux2Core=True,maxFlux13C=[],procString='raw'):
+    def findFluxesStds(self,Nrep=20,Nrand=5,erase=True,labelMin=0.99,fluxLimit=[0.0001,0.0005,0.001,0.005,0.01,0.05,0.1],limitFlux2Core=True,maxFlux13C=[],procString='raw'):
         "Finds fluxes and standard deviations"
 
         # Test that there are core reactions included
@@ -763,7 +763,7 @@ class TwoSC13Model(C13Model):
         return C13Model.findFluxesStds(self,Nrep,Nrand,erase,labelMin=labelMin,maxFlux13C=maxFlux13C,procString=procString)
 
 
-    def findFluxesRanges(self,Nrep,fluxNames,erase=True,labelMin=0.99,fluxLimit=[0,0.05,0.2],limitFlux2Core=True,maxFlux13C=[],procString='raw'):
+    def findFluxesRanges(self,Nrep,fluxNames,erase=True,labelMin=0.99,fluxLimit=[0.0001,0.0005,0.001,0.005,0.01,0.05,0.1],limitFlux2Core=True,maxFlux13C=[],procString='raw'):
         "Finds fluxes and ranges of fluxes within allowable Objective Function"     
 
         # Test that there are core reactions included

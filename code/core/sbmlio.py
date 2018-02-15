@@ -376,7 +376,7 @@ class SBMLExporter:
 
         for reaction in reactionList.reactions:
             sbmlRxn = model.createReaction()
-            SBMLsyntax = "JR904"      #change SBML syntax to the name of the model being used
+            SBMLsyntax = "JO1366"      #change SBML syntax to the name of the model being used
             if SBMLsyntax == "JR904":
                 rxnname = "R_"+reaction.name.replace('(e)','_e_',1)  
             elif SBMLsyntax == "JO1366":

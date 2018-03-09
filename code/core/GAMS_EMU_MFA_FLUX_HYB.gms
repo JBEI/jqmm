@@ -7,6 +7,7 @@ $offinclude
 $offsymxref
 $offuelxref
 $onempty
+$offdigit
 
 option profile=1;
 OPTION decimals = 8

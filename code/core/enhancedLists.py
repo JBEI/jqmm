@@ -603,7 +603,7 @@ class ReactionList():
             fluxDict[reaction.name]=reaction.fluxBounds
         return fluxDict
 
-
+    ''' #Needs to be tested
     def capFluxBounds(self,maximum=100):
         # caps the maximum of flux bounds. ASSUMES NO DEEPCOPY!!!
         maximum = abs(maximum)
@@ -612,7 +612,7 @@ class ReactionList():
             bound = boundDict[name]
             bound.net.hi =  maximum if bound.net.hi>  maximum else bound.net.hi
             bound.net.lo = -maximum if bound.net.lo< -maximum else bound.net.lo    
-        
+    '''    
         
     def getReactionDictionary(self):     # Do we really need both of this and getFluxDictionary?
         """

@@ -9,6 +9,7 @@ This module should soon be adapted to the GAMS python API: https://www.gams.com/
 import os,time,re,numpy,subprocess, unittest
 from utilities import file2tuple
 import core, enhancedLists
+from decimal import Decimal
 
 # GAMS sets, parameters and tables form the basis of problems defined in GAMS. 
 # Class for GAMS sets
@@ -122,7 +123,7 @@ class GAMSParameter:
 #        for element in sorted(Elements,key=compare_elements):
         for element in sorted(Elements, key= lambda elem: '*'.join(list(elem))):
             middle = "\'"+'\',\''.join(list(element))+"\'"
-            string = parname + "("+middle+")="+str(Elements[element])+";\n"
+            string = parname + "("+middle+")="+str(round(Decimal(Elements[element]),8))+";\n"
             lines.append(string)
 
         # Output

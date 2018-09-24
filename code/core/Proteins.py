@@ -1,7 +1,9 @@
+from __future__ import print_function
 # Part of the JBEI Quantitative Metabolic Modeling Library (JQMM)
 # Copyright (c) 2016, The Regents of the University of California.
 # For licensing details see "license.txt" and "legal.txt".
 
+from builtins import str
 import re
 import core
 import NamedRangedNumber
@@ -123,7 +125,7 @@ class ProteinSet(NamedRangedNumber.NamedRangedNumberSet):
                         item.addName(alternateNamesInOrder[0])
                         alternateNamesInOrder = alternateNamesInOrder[1:]
                     for n in item.names:
-                        if givenValues.has_key(n):
+                        if n in givenValues:
                             item.set(givenValues[n])
                             break
                     items.append(item)
@@ -140,78 +142,78 @@ def test():
 
     try:
         vError = False
-        print "Instantiating from illegal string \"test=[2,3,4]\", expecting failure ..."
+        print("Instantiating from illegal string \"test=[2,3,4]\", expecting failure ...")
         a = Protein.fromString("test=[2,3,4]")
     except ValueError:
         vError = True
-        print "\tGot ValueError as expected."
+        print("\tGot ValueError as expected.")
         pass
     assert vError, "NamedRangedNumber accepted wrong input."
 
-    print "\nInstantiating from string value \"test=[2:3:4]\" ..."
+    print("\nInstantiating from string value \"test=[2:3:4]\" ...")
 
     a = Protein.fromString("test=[2:3:4]")
     assert a.canonicalName == 'test', "Name wrong"
     b = Protein.fromString("dorks=[0.5:1:1.5]")
     c = a + 3
-    print "\t" + str(a) + ' + 3 = ' + str(c)
+    print("\t" + str(a) + ' + 3 = ' + str(c))
     d = a + b
-    print "\t" + str(a) + ' + ' + str(b) + ' = ' + str(d)
+    print("\t" + str(a) + ' + ' + str(b) + ' = ' + str(d))
     assert d.value.best == 4.0, "Addition failure, d.value.best should be 4.0."
 
-    print "\nInstantiating a ProteinSet from an invalid string, expecting failure:"
+    print("\nInstantiating a ProteinSet from an invalid string, expecting failure:")
     strA = "(bob fred frank) or (jed and Bill123) and (fred & billyBob) or captainAmerica"
-    print "\t" + strA
+    print("\t" + strA)
     try:
         aError = False
         proteinSets = ProteinSet.createSetsFromStrings(strA)
     except AssertionError:
         aError = True
-        print "\tGot AssertionError as expected."
+        print("\tGot AssertionError as expected.")
         pass
     assert aError, "ProteinSet.createSetsFromStrings accepted wrong input."
 
-    print "\nInstantiating a ProteinSet from strings:"
+    print("\nInstantiating a ProteinSet from strings:")
     strA = "(bob and fred and frank) or (jed and Bill123) or (fred and billyBob) or captainAmerica"
     strB = "bob=12 fred=45 frank=[1:22:32] jed=13.1 Bill123=100"
-    print "\t" + strA
-    print "\t" + strB
+    print("\t" + strA)
+    print("\t" + strB)
     subSets = ProteinSet.createSetsFromStrings(strA, None, strB)
 
     masterSet = ProteinSet()
     newSubSets = []
-    print "Master set:"
+    print("Master set:")
     for subSet in subSets:
         newSubSets.append(masterSet.recastSet(subSet))
-    print "\t" + str(masterSet)
-    print "Subsets consolidated, for embedding:"
-    print "\t" + ProteinSet.createStringFromSets(newSubSets)
+    print("\t" + str(masterSet))
+    print("Subsets consolidated, for embedding:")
+    print("\t" + ProteinSet.createStringFromSets(newSubSets))
 
-    print "Significance tests against master set:"
-    print "\tAgainst 12:" + str(masterSet.testSignificance(12))
+    print("Significance tests against master set:")
+    print("\tAgainst 12:" + str(masterSet.testSignificance(12)))
     assert masterSet.testSignificance(12), "Significance test fails."
-    print "\tAgainst 12 with equals not counting:" + str(masterSet.testSignificance(12, equalIsntEnough=True))
+    print("\tAgainst 12 with equals not counting:" + str(masterSet.testSignificance(12, equalIsntEnough=True)))
     assert not masterSet.testSignificance(12, equalIsntEnough=True), "Significance test fails."
-    print "\tAgainst 14:" + str(masterSet.testSignificance(14))
+    print("\tAgainst 14:" + str(masterSet.testSignificance(14)))
     assert not masterSet.testSignificance(14), "Significance test fails."
 
-    print "\nInstantiating a ProteinSet from odd input:"
+    print("\nInstantiating a ProteinSet from odd input:")
     strA = "(AraF and AraG and AraH)"
     strB = "( b1901  and  b1900  and  ( b1898  and  b1899 ) )"
     strC = "AraG=15 b1898=20"
-    print "\tMain string: " + strA
-    print "\tSecondary string: " + strB
-    print "\tValue string: " + strC
+    print("\tMain string: " + strA)
+    print("\tSecondary string: " + strB)
+    print("\tValue string: " + strC)
     subSets = ProteinSet.createSetsFromStrings(strA, strB, strC)
 
     masterSet = ProteinSet()
     newSubSets = []
-    print "Master set:"
+    print("Master set:")
     for subSet in subSets:
         newSubSets.append(masterSet.recastSet(subSet))
-    print "\t" + str(masterSet)
-    print "Subsets consolidated, for embedding:"
-    print "\t" + ProteinSet.createStringFromSets(newSubSets)
+    print("\t" + str(masterSet))
+    print("Subsets consolidated, for embedding:")
+    print("\t" + ProteinSet.createStringFromSets(newSubSets))
 
 
 

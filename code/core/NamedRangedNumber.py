@@ -1,7 +1,13 @@
+from __future__ import print_function
+from __future__ import division
 # Part of the JBEI Quantitative Metabolic Modeling Library (JQMM)
 # Copyright (c) 2016, The Regents of the University of California.
 # For licensing details see "license.txt" and "legal.txt".
 
+from builtins import str
+from builtins import map
+from builtins import object
+from past.utils import old_div
 import re
 import core
 
@@ -117,9 +123,9 @@ class NamedRangedNumber(object):
     def __div__(self,other):
         "NamedRangedNumber value division."
         if isinstance(other, NamedRangedNumber):
-            v = self.value / other.value
+            v = old_div(self.value, other.value)
         else:
-            v = self.value / other
+            v = old_div(self.value, other)
         return NamedRangedNumber(self.names, v)
 
 
@@ -160,9 +166,9 @@ class NamedRangedNumber(object):
     def div(self,other):
         "NamedRangedNumber value division."
         if isinstance(other, NamedRangedNumber):
-            self.value = self.value / other.value
+            self.value = old_div(self.value, other.value)
         else:
-            self.value = self.value / other
+            self.value = old_div(self.value, other)
 
 
 
@@ -243,7 +249,7 @@ class NamedRangedNumberSet(object):
                     mergedNames[n] = 1
                 for n in collision.names:
                     mergedNames[n] = 1
-                mergedNameList = mergedNames.keys()
+                mergedNameList = list(mergedNames.keys())
                 if preferExistingObjects:
                     if not preferExistingValues:
                         collision.value = i.value
@@ -333,5 +339,5 @@ class NamedRangedNumberSet(object):
 
 if __name__ == "__main__":
 
-    print "TODO: Testing here..."
+    print("TODO: Testing here...")
 

@@ -5,7 +5,14 @@
 The FluxModels module provides the classes needed to hold the three types of flux models used in jQMM: Flux Balance Analysis (FBA), 
 13C Metabolic Flux Analysis (13C MFA) and two-scale 13C Metabolic Flux Analysis (2S-13C MFA). 
 """
+from __future__ import print_function
+from __future__ import division
 
+from builtins import next
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import os, time, copy, numpy, re, matplotlib, unittest
 import GAMSclasses, ReactionNetworks, core, DB, enhancedLists, labeling
 from pylab import figure, xlabel, ylabel, title, savefig
@@ -19,7 +26,7 @@ matplotlib.rc('font', **font)
 
 
 
-class FluxModel:
+class FluxModel(object):
     """Base class to derive all others model classes involved in flux analysis """
 
     def __init__(self, reactionNetwork, GAMSfileName, outputFuncs):
@@ -801,26 +808,26 @@ class TwoSC13Model(C13Model):
 
         if Verbose:        
             FBAFile.write('KEIOlimfileBefore.sbml')  
-            print "limits:"
-            print limits
+            print("limits:")
+            print(limits)
         
         resultsFBA = fbaModel.findFluxes(warnFail=warnFail)
         if Verbose:
-            print "successful?(limitFlux2Core before)"
-            print resultsFBA.successful
+            print("successful?(limitFlux2Core before)")
+            print(resultsFBA.successful)
         if not resultsFBA.successful:
             raise Exception('Extracellular fluxes infeasible')
 
         for reaction in reacsFlowingIntoCore.reactions:
             if Verbose:
-                print "limiting flux to "+reaction.name
+                print("limiting flux to "+reaction.name)
                     
             fluxBound = fluxBoundsDict[reaction.name]
             ub = fluxBound.net.hi
             lb = fluxBound.net.lo
             
             limitIter  = limits.__iter__()
-            limit      = limitIter.next()
+            limit      = next(limitIter)
             while True:
                 # Try setting to limit
                 if reaction.hasForwardFlow:
@@ -836,22 +843,22 @@ class TwoSC13Model(C13Model):
                 # Break if there is no next level or FBA was successful
                 limitOld = limit
                 try: 
-                    limit = limitIter.next()
+                    limit = next(limitIter)
                 except StopIteration:
                     break
                 if results.successful:
                     break
 
             if Verbose:
-                print "reaction %s set to level = %s" % (reaction.name, str(limitOld))
+                print("reaction %s set to level = %s" % (reaction.name, str(limitOld)))
 
         resultsFBA = fbaModel.findFluxes(warnFail=warnFail)
         if not resultsFBA.successful:
             raise Exception('Flux limits to core too stringent!!')
         
         if Verbose:
-            print "successful?(limitFlux2Core after)"
-            print resultsFBA.successful
+            print("successful?(limitFlux2Core after)")
+            print(resultsFBA.successful)
         
         # Storing changes in reactionNetwork
         if Verbose:
@@ -932,7 +939,7 @@ class TwoSC13Model(C13Model):
 
             for met,fluxinout,coreFlux in metsNonZeroTuple:
                 ncarb = carbondict[met]            
-                value = abs(fluxinout/inFluxRef)
+                value = abs(old_div(fluxinout,inFluxRef))
                 if fluxinout < 0:
                     name  = "RO" + met
                     line  = name + "\t" + met + " --> Out"+met+  "\t"  +carbonstr[0:ncarb]+" : "+carbonstr[0:ncarb]
@@ -1033,8 +1040,8 @@ class TwoSC13Model(C13Model):
         self.reactionNetwork.reactionList.addFluxes(fluxDict)
         inFluxRef = self.reactionNetwork.inFluxRef 
         #    core reactions
-        for name in fluxDict.keys():
-            fluxDict[name] = fluxDict[name]/inFluxRef             
+        for name in list(fluxDict.keys()):
+            fluxDict[name] = old_div(fluxDict[name],inFluxRef)             
         self.reactionNetwork.C13ReacNet.reactionList.addFluxes(fluxDict)
         self.reactionNetwork.C13ReacNet.reactionList.zeroFluxExchange()
 
@@ -1155,7 +1162,7 @@ class ELVAModel(FluxModel,C13Model):
 
 
 # Classes for results in GAMSProblem
-class Results:
+class Results(object):
     "Base class for results"
 
     def __init__(self,resultsDict,reactionNetwork):
@@ -1178,7 +1185,7 @@ class Results:
             if randomization != 0: 
                 fluxes   =  bestResults[randomization]['Vout'].getReactionList().getFluxDictionary()
                 fluxesList.append(fluxes)
-        fluxNames = bestResults[0]['Vout'].getReactionList().getFluxDictionary().keys()
+        fluxNames = list(bestResults[0]['Vout'].getReactionList().getFluxDictionary().keys())
         fluxDictEnsemble = fluxDictEns(fluxesList,fluxNames,fluxDictRef=bestResults[0]['Vout'].getReactionList().getFluxDictionary())
         FITFluxesVar     = fluxDictEnsemble.getFluxDictStd(attribs)
         FITFluxesVarHi,FITFluxesVarLo  = fluxDictEnsemble.getFluxDictStdRef(attribs)
@@ -1315,8 +1322,8 @@ class Results:
            else:
                 svgin = svgInFileName
 
-           print "svgin:"
-           print svgin     
+           print("svgin:")
+           print(svgin)     
         
            # instantiate FluxMap object
            fmap = FluxMap(inputFilename=svgin)
@@ -1335,8 +1342,8 @@ class Results:
 
            # set parameters for flux map
            svgin=svgDir+svgInFileName
-           print "svgin:"
-           print svgin     
+           print("svgin:")
+           print(svgin)     
         
            # instantiate FluxMap object
            fmap = FluxMaps.FluxMapOLD(svgin)
@@ -1447,7 +1454,7 @@ class Results:
         orientations = []
         
         for i in range(len(newLabels)):
-            if i < (len(newLabels))/2:
+            if i < old_div((len(newLabels)),2):
                  orientations.append(-1)
             else:
                   orientations.append(1)
@@ -1532,9 +1539,9 @@ class FBAResults(Results):
         # Print only if asked
         if onlyFail:
             if not self.successful:
-                print string
+                print(string)
         else:
-            print string
+            print(string)
 
 
 
@@ -1625,16 +1632,16 @@ class C13Results(Results):
         
         # Should find a better way to handle this exception
         if not bestOFs:  # No feasible solutions
-            print "NO FEASIBLE SOLUTIONS!!!"
+            print("NO FEASIBLE SOLUTIONS!!!")
             for line in infeasAll[randomization]:
-                print line
+                print(line)
 
             raise Exception('NO FEASIBLE SOLUTIONS!!!')            
 
         return bestResults,bestOFs
         
     def plotMetaboliteFlux(self,metName, minFluxGroup = 0.05, maxFluxGroup=1.5,titleFig='',save='default'):        
-        print "Method not available"
+        print("Method not available")
 
 
     def plotExpvsCompLabelXvsY(self,titleFig='',axes='default',color='b',fmt='.',save='default'):
@@ -1689,7 +1696,7 @@ class C13Results(Results):
 
         # Adapting input
         if fragment == 'all':
-            fragments = EMULabelDict.keys()
+            fragments = list(EMULabelDict.keys())
         elif isinstance(fragment,str):
             fragments = [fragment]
 
@@ -1735,7 +1742,7 @@ class TSResults(C13Results):
             if randomization != 0: 
                 fluxes   =  bestResults[randomization]['VGEMout'].getReactionList().getFluxDictionary()
                 fluxesList.append(fluxes)
-        fluxNames = bestResults[0]['VGEMout'].getReactionList().getFluxDictionary().keys()
+        fluxNames = list(bestResults[0]['VGEMout'].getReactionList().getFluxDictionary().keys())
         fluxDictEnsemble = fluxDictEns(fluxesList,fluxNames,fluxDictRef=bestResults[0]['VGEMout'].getReactionList().getFluxDictionary())
         FITFluxesVar     = fluxDictEnsemble.getFluxDictStd(attribs)
         FITFluxesVarHi,FITFluxesVarLo  = fluxDictEnsemble.getFluxDictStdRef(attribs)
@@ -1827,7 +1834,7 @@ class ELVAResults(Results):
                                 
                 for m in range(min(len(mdv),len(MDVfit))):
                     x.append(mdv[m])
-                    Dx.append(std[m]/2)
+                    Dx.append(old_div(std[m],2))
                     y.append(MDVfit[m])
                     DyU.append( (labelMinMax[abbrev][str(m)][1]-MDVfit[m]))
                     DyL.append(-(labelMinMax[abbrev][str(m)][0]-MDVfit[m]))
@@ -1863,9 +1870,9 @@ class ELVAResults(Results):
     
             title(titleFig,fontweight='bold')
         else:
-            print "No data in plot"
-            print x
-            print y
+            print("No data in plot")
+            print(x)
+            print(y)
 
         # Output to file
         outputFile = open(outputFileName,'w')
@@ -1885,7 +1892,7 @@ class ELVAResults(Results):
         
         # Metabolites to print
         if names == 'default':
-            names = labelMinMax.keys()
+            names = list(labelMinMax.keys())
         
         
         for fragment in names:
@@ -1896,7 +1903,7 @@ class ELVAResults(Results):
         # Output
         if fileName == 'None':    # Print to screen
             for line in lines:
-               print line
+               print(line)
         elif fileName == 'toString':
             return ''.join(lines)
         else:                   # Print to file
@@ -1962,7 +1969,7 @@ class TSFVAResults(C13FVAResults,TSResults):
         # Debug
         debug = False
         if debug:      
-            print "in debug"
+            print("in debug")
             fluxName = 'G6PDH2r'
             dir ='/scratch/hgmartin_gams_files/tests/batch/bigtestp02/'
             
@@ -1994,7 +2001,7 @@ class TSFVAResults(C13FVAResults,TSResults):
 
 
 
-class fluxDictEns():
+class fluxDictEns(object):
     " Class for ensemble of flux dictionaries"
     
     def __init__(self,fluxDictList,fluxNames,fluxDictRef=[]):

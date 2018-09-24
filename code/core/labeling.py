@@ -4,7 +4,13 @@
 """
 This module contains all the methods used to treat labeling data (i.e. Mass Distribution Vectors)
 """
+from __future__ import print_function
+from __future__ import division
 
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import re
 import numpy, random
 import DB
@@ -17,7 +23,7 @@ import utilities as utils
 
 
 # Labeling data classes
-class labelingData:
+class labelingData(object):
     "General class for storing labeling data data"
 
     def __init__(self,lines = 'default',dataTup='default',minSTD=0):  # TODO: This init can be improved by using class methods      
@@ -158,7 +164,7 @@ class labelingData:
     def normalize(self):
         total = sum(self.mdv)
         if total != 0:
-            self.mdv   = self.mdv / total
+            self.mdv   = old_div(self.mdv, total)
          
         # Update line        
         self.line = self.getLine()
@@ -183,7 +189,7 @@ class LCMSLabelData(labelingData):
         if standard:     # Generate standarized alias
             abbrev, warning = getStdAlias(abbrev)  
             if not abbrev:
-                print warning
+                print(warning)
         
         return abbrev    
 
@@ -221,7 +227,7 @@ class GCMSLabelData(labelingData):
         if standard:     # Generate standarized alias
             abbrev, warning = getStdAlias(abbrev)  
             if not abbrev:
-                print warning
+                print(warning)
                 
         return abbrev+number
 
@@ -245,7 +251,7 @@ class GCMSLabelData(labelingData):
 
 # Classes for fragments (GCMS,LCMS....)     
 
-class fragment():
+class fragment(object):
     """ A base class for all fragments"""
 
     def __init__(self,emu,name,abbrev,ncarbons,composition):
@@ -314,7 +320,7 @@ class CEMSfragment(fragment):
 
 
         
-class LabelinglString():
+class LabelinglString(object):
     """ An class for strings containing labeling info
         Example input:
                  lstring: U
@@ -386,7 +392,7 @@ def getStdAlias(name):
         warning = ''
     else:
         newName = ''
-        warning = 'Warning: fragment '+str(name)+' not found in fragDictBasic:\n'+str(fragDictBasic_.keys())
+        warning = 'Warning: fragment '+str(name)+' not found in fragDictBasic:\n'+str(list(fragDictBasic_.keys()))
 
     return newName, warning
     

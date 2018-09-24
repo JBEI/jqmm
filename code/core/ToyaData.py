@@ -5,7 +5,12 @@
 All functions to obtain the Toya data and a test suite.
 This module effectively reproduces all figures in Garcia Martin et al 2015
 """
+from __future__ import print_function
+from __future__ import division
 
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import unittest, os, copy, shelve, sys, traceback, re
 import matplotlib, numpy, difflib
 import matplotlib.pyplot as plt
@@ -54,8 +59,8 @@ class generalTest(unittest.TestCase):
             elif type(thing) is dict: 
                 dict_ = thing
             else:              # unknown input error  
-                print files1
-                print files2
+                print(files1)
+                print(files2)
                 raise Exception('Inputs must be in list or dict type')
             dicts.append(dict_)
 
@@ -88,12 +93,12 @@ class generalTest(unittest.TestCase):
         """
 
         # See if we have the same fluxes on each dict
-        errmsg1 = "Fluxes are different:\n"+str(dict1.keys())+"\n"+str(dict2.keys())
+        errmsg1 = "Fluxes are different:\n"+str(list(dict1.keys()))+"\n"+str(list(dict2.keys()))
         self.assertEqual(set(dict1.keys()),set(dict2.keys()),msg=errmsg1)
 
         noChangeTotal = True
         errmsg        = '\n'
-        for name in dict1.keys():
+        for name in list(dict1.keys()):
             fluxRF = dict1[name]
             fluxN  = dict2[name]
             
@@ -134,7 +139,7 @@ class testInputFiles(generalTest):  # TODO: change this to testInputFiles
             self.refFiles = files
         except:
             e = sys.exc_info()[0]
-            print 'Problems loading stored data in testFiles: \n'+str(e)   
+            print('Problems loading stored data in testFiles: \n'+str(e))   
            
            
     def testStrain(self,strain):
@@ -182,7 +187,7 @@ class testOptimizationFiles(generalTest):
             self.refFiles = files
         except:
             e = sys.exc_info()[0]
-            print 'Problems loading stored data in testFiles: \n'+str(e)   
+            print('Problems loading stored data in testFiles: \n'+str(e))   
 
 
     def testStrain(self,strain):
@@ -235,14 +240,14 @@ class testTSFluxCalculation(generalTest):
                 self.fluxDicts[strain] = db['fluxDict']   
                 db.close()
             except:
-                print 'Problems loading stored data in testTSFluxCalculation for strain %s:\n%s' % (strain, traceback.format_exc())
+                print('Problems loading stored data in testTSFluxCalculation for strain %s:\n%s' % (strain, traceback.format_exc()))
 
 
     def testStrain(self,strain,saved=False):
         """ Tests a single strain 
         -) saved decides whether to used saved solutions (if True) or calculate them anew (if False) 
         """
-        print '\nTesting strain: '+str(strain)+'\n'
+        print('\nTesting strain: '+str(strain)+'\n')
         # Names for fluxes to be tested
         fluxNames      = ['G6PDH2r','GAPD','CS','FUM','ICDHyr','ACODA','ACKr','PDH']
         fluxNames.extend(['THD2','ICDHyr','G6PDH2r','GND','MTHFD','GLUDy','KARA1i','C160SN','C181SN','ASAD'])
@@ -327,7 +332,7 @@ class testELVA(generalTest):
             db.close()
         except:
             e = sys.exc_info()[0]
-            print 'Problems loading stored data in testELVA: \n'+str(e)  
+            print('Problems loading stored data in testELVA: \n'+str(e))  
             
             
     def getResults(self,saved=False):
@@ -359,7 +364,7 @@ class testELVA(generalTest):
         delta = 0.1 
         
         # See if we have the same files on each list
-        errmsg1 = "Fragment lists keys to be compared are different: \n" +str(dict1.keys())+'\n'+'vs.'+str(dict2.keys())
+        errmsg1 = "Fragment lists keys to be compared are different: \n" +str(list(dict1.keys()))+'\n'+'vs.'+str(list(dict2.keys()))
         self.assertEqual(set(dict1.keys()),set(dict2.keys()),msg=errmsg1)
         
         for mvalue in dict1:
@@ -415,7 +420,7 @@ class testConstPower(generalTest):
             self.FVAreactionList      = db['FVAreactionList']   
             db.close()
         except:
-            print 'Problems loading stored data in testConstPower:\nTest dir: %s:\n%s' % (testdir, traceback.format_exc())
+            print('Problems loading stored data in testConstPower:\nTest dir: %s:\n%s' % (testdir, traceback.format_exc()))
  
  
     def getResults(self,strain='wt5h',saved=True):
@@ -506,7 +511,7 @@ class testPredictions(generalTest):
             self.resultsMOMAFixed    = db['resultsMOMAFixed']
             db.close()
         except:
-            print 'Problems loading stored data in testPredictions:\n%s' % (traceback.format_exc())
+            print('Problems loading stored data in testPredictions:\n%s' % (traceback.format_exc()))
 
 
     def getFVAresults(self,strain):
@@ -1020,7 +1025,7 @@ def compareGraph(reactionList1, reactionList2, reactionList3, maxPlot, titleFig=
     
     plt.ylabel('Flux (mmol/gdw/h)')
     plt.title('Minimum and maximum values for exchange fluxes')
-    plt.xticks(ind+width/2.,tuple(names),rotation='vertical')
+    plt.xticks(ind+old_div(width,2.),tuple(names),rotation='vertical')
     plt.legend( (p2[0], p1[0], p4[0], p3[0], p6[0], p5[0]),
                ('Max. stoich. + LFTC + $^{13}$C data', 'Min. stoich. + LFTC + $^{13}$C data','Max. stoich. + lim. flux to core (LFTC)', 'Min. stoich. + lim. flux to core (LFTC)','Max. only stoich.', 'Min. only stoich.'),
                prop={'size':18})
@@ -1094,9 +1099,9 @@ def getFigure(number,saved=True):
             DTS = abs(fluxDictTSPPP[name].net.hi  - fluxDictTSPPP[name].net.lo)
             DFVA= abs(fluxDictFVAPPP[name].net.hi - fluxDictFVAPPP[name].net.lo)
             if DFVA !=0 :
-                QfluxPPP.append(DTS/DFVA)
-        QPPP = float(sum(QfluxPPP))/len(QfluxPPP)
-        print 'TS is '+str(QPPP)+' % of FVA'
+                QfluxPPP.append(old_div(DTS,DFVA))
+        QPPP = old_div(float(sum(QfluxPPP)),len(QfluxPPP))
+        print('TS is '+str(QPPP)+' % of FVA')
       
         ##### Glycolysis plot                                              # Duplicated code, but ok for the moment being
         TSreactionListGLYC       = TSreactionList.getReactionSubSet(rxnNames=fluxNamesGLYC)
@@ -1118,9 +1123,9 @@ def getFigure(number,saved=True):
             DTS = abs(fluxDictTSGLYC[name].net.hi  - fluxDictTSGLYC[name].net.lo)
             DFVA= abs(fluxDictFVAGLYC[name].net.hi - fluxDictFVAGLYC[name].net.lo)
             if DFVA !=0 :
-                QfluxGLYC.append(DTS/DFVA)
-        QGLYC = float(sum(QfluxGLYC))/len(QfluxGLYC)
-        print 'TS is '+str(QGLYC)+' % of FVA'
+                QfluxGLYC.append(old_div(DTS,DFVA))
+        QGLYC = old_div(float(sum(QfluxGLYC)),len(QfluxGLYC))
+        print('TS is '+str(QGLYC)+' % of FVA')
     
     elif number == 6:
         "Cofactor balances figure"
@@ -1456,7 +1461,7 @@ def getSuppFigure(number,saved=True):
                 TSmodel   = getTSmodel(strain)    
                 TSresults = TSmodel.findFluxesRanges(Nrep=Nreplicates,fluxNames=fluxNames, procString='proc') 
                 OFs.append(TSresults.OF)
-            OFsAv[Nreplicates] = sum(OFs)/float(len(OFs))
+            OFsAv[Nreplicates] = old_div(sum(OFs),float(len(OFs)))
 
         # Assemble graph
         x = []
@@ -1469,8 +1474,8 @@ def getSuppFigure(number,saved=True):
         xlabel('Number of runs')
         ylabel('Average objective Function (OF)')        
 
-        print x
-        print y
+        print(x)
+        print(y)
 
     else:
         raise Exception("Figure "+str(number)+" not available")

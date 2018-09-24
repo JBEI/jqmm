@@ -5,6 +5,10 @@
 The sbmlio module provides support for input/output of ReactionNetwork structures in SBML format.
 """
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import re
 import core, DB, enhancedLists, labeling
 import Genes, Proteins
@@ -12,7 +16,7 @@ import utilities as utils
 import libsbml
 
 
-class SBMLImporter:
+class SBMLImporter(object):
     """
     Helper class to parse the given string as SBML and extract various structures important to a ReactionNetwork.
     """
@@ -256,7 +260,7 @@ class SBMLImporter:
 
 
 
-class SBMLExporter:
+class SBMLExporter(object):
     """
     Helper class to render the given ReactionNetwork as an SBML string on-demand.
     """

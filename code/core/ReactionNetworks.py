@@ -50,7 +50,7 @@ class ReactionNetwork(object):
         if isinstance(source, basestring):
             # If the string has XML brackets, it's likely not a filename.
             # (We don't accept filenames that are complex shell commands, e.g. with STDOUT routings.)
-            if '<' in source and '>' in source:
+            if b'<' in source and b'>' in source:
                 sbmlFileContents = source
             else:
                 sbmlFileName = source

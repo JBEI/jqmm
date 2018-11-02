@@ -9,7 +9,6 @@ from __future__ import division
 
 from builtins import str
 from builtins import range
-from past.utils import old_div
 import re, os
 import core, DB
 import matplotlib.pyplot as plt
@@ -17,6 +16,9 @@ from matplotlib.font_manager import FontProperties
 from pylab import figure, plot, xlabel, ylabel, title, text, savefig
 import numpy
 
+
+def old_div(a, b):
+    return a//b
 
 def is_float(s):
     """

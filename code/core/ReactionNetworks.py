@@ -14,7 +14,7 @@ from builtins import str
 from builtins import range
 from past.builtins import basestring
 from builtins import object
-from past.utils import old_div
+from utilities import old_div
 import os, re, numpy, random
 import GAMSclasses, core, DB, enhancedLists, labeling, sbmlio
 import utilities as utils

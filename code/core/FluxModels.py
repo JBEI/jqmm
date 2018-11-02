@@ -11,7 +11,7 @@ from __future__ import division
 from builtins import next
 from builtins import str
 from builtins import range
-from past.utils import old_div
+from utilities import old_div
 from builtins import object
 import os, time, copy, numpy, re, matplotlib, unittest
 import GAMSclasses, ReactionNetworks, core, DB, enhancedLists, labeling

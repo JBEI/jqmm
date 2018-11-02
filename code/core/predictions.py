@@ -8,7 +8,7 @@ Minimization of Metabolic Adjustment (MoMA, Segre et al PNAS 2002) or Regulatory
 """
 from __future__ import division
 
-from past.utils import old_div
+from utilities import old_div
 import os
 import FluxModels, GAMSclasses, core, ReactionNetworks
 import utilities as utils

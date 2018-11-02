@@ -10,7 +10,7 @@ from __future__ import division
 from builtins import str
 from builtins import range
 from builtins import object
-from past.utils import old_div
+from utilities import old_div
 import re
 import numpy, random
 import DB

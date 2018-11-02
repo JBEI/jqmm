@@ -10,7 +10,7 @@ from __future__ import division
 
 from builtins import str
 from builtins import range
-from past.utils import old_div
+from utilities import old_div
 import unittest, os, copy, shelve, sys, traceback, re
 import matplotlib, numpy, difflib
 import matplotlib.pyplot as plt

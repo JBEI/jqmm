@@ -14,7 +14,6 @@ from builtins import str
 from builtins import range
 from past.builtins import basestring
 from builtins import object
-from utilities import old_div
 import os, re, numpy, random
 import GAMSclasses, core, DB, enhancedLists, labeling, sbmlio
 import utilities as utils
@@ -312,7 +311,7 @@ class ReactionNetwork(object):
                 reaction.measured = True
         elif isinstance(flux, tuple):
             lb,ub = flux
-            fluxNew = core.flux(((core.rangedNumber(lb,old_div((lb+ub),2),ub)),(core.rangedNumber(0,0,0))))
+            fluxNew = core.flux(((core.rangedNumber(lb,utils.old_div((lb+ub),2),ub)),(core.rangedNumber(0,0,0))))
             self.changeFluxBounds(reactionName, fluxNew)      
         else:      # shortened version                 
             try:            
@@ -394,7 +393,7 @@ class ReactionNetwork(object):
                     ub = reaction.fluxBounds.net.hi
                     lb = reaction.fluxBounds.net.lo
                     if abs(ub-lb) < max(0.1*abs(ub),0.01): 
-                        value = -abs(old_div((ub+lb),2)) 
+                        value = -abs(utils.old_div((ub+lb),2))
                     else:
                         value = 0
                 else:
@@ -781,7 +780,7 @@ class C13ReactionNetwork(ReactionNetwork):
             compDict = {}
             for comp in comps:
                 compName = comp.split(' ')[1] # e.g.: UN or 1-C
-                compPerc = old_div(float(comp.split(' ')[0].replace('%','')), 100) # e.g.: 0.30
+                compPerc = utils.old_div(float(comp.split(' ')[0].replace('%','')), 100) # e.g.: 0.30
                 compDict[compName] = compPerc
             # Feed Dict , e.g. {'Glu': {'1-C': 0.3, 'UN': 0.5, 'U': 0.2}}    
             feedDict[metName] = compDict 
@@ -1254,7 +1253,7 @@ class TSReactionNetwork(C13ReactionNetwork):
         
         # Decide wether to use bounds or net flux to give the reference
         if bounds:
-            inFluxRef = abs(old_div((inReaction.fluxBounds.net.hi+inReaction.fluxBounds.net.lo),2))   
+            inFluxRef = abs(utils.old_div((inReaction.fluxBounds.net.hi+inReaction.fluxBounds.net.lo),2))
         else:
             inFluxRef  = abs(inReaction.flux.getComp('net','best'))
 

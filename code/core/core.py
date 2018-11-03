@@ -6,11 +6,10 @@ from __future__ import division
 
 from builtins import str
 from builtins import range
-from utilities import old_div
 from builtins import object
 import re, copy, numpy, math, string, unittest
 import enhancedLists, Genes, Proteins, DB
-import utilities as utils
+import utilities as util
 
 
 "##################################"
@@ -1357,17 +1356,17 @@ class rangedNumber(object):
     def __div__(self,other):
         "ranged number division"
         if utils.is_float(self.lo):
-            loNew = old_div(self.lo, other) # Exception will automatically raise if other is None
+            loNew = utils.old_div(self.lo, other) # Exception will automatically raise if other is None
         else:
             loNew = None
         if utils.is_float(self.hi):
-            hiNew = old_div(self.hi, other)
+            hiNew = utils.old_div(self.hi, other)
         else:
             hiNew = None
         if other >= 0:
-            result = rangedNumber(loNew, old_div(self.best, other), hiNew)
+            result = rangedNumber(loNew, utils.old_div(self.best, other), hiNew)
         else:
-            result = rangedNumber(hiNew, old_div(self.best, other), loNew)
+            result = rangedNumber(hiNew, utils.old_div(self.best, other), loNew)
         return result
 
 
@@ -1517,7 +1516,7 @@ class flux(object):
             net      = float(net)      if utils.is_float(net)   else net
             coeff    = float(coeff)    if utils.is_float(coeff) else coeff            
         
-            exchange  = old_div(coeff,(1-coeff)) 
+            exchange  = utils.old_div(coeff,(1-coeff))
             
             # get value of net for comparison           
             try:
@@ -1625,10 +1624,10 @@ class flux(object):
 
     def __div__(self,other):
         "flux division by scalar"
-        forward  = self.forward  if isinstance(self.forward, str)  else old_div(self.forward, other)
-        backward = self.backward if isinstance(self.backward, str) else old_div(self.backward, other)
-        net      = self.net      if isinstance(self.net, str)      else old_div(self.net, other)
-        exchange = self.exchange if isinstance(self.exchange, str) else old_div(self.exchange, other)
+        forward  = self.forward  if isinstance(self.forward, str)  else utils.old_div(self.forward, other)
+        backward = self.backward if isinstance(self.backward, str) else utils.old_div(self.backward, other)
+        net      = self.net      if isinstance(self.net, str)      else utils.old_div(self.net, other)
+        exchange = self.exchange if isinstance(self.exchange, str) else utils.old_div(self.exchange, other)
         
         newflux = flux((forward,backward),(net,exchange))
         return newflux        
@@ -1802,7 +1801,7 @@ class testRangedNumbers(unittest.TestCase):
         self.assertTrue(str(A+B) == '[0.445861873485:0.75:1.05149626863]')
         self.assertTrue(str(A-B) == '[0.145861873485:0.45:0.751496268634]')
         self.assertTrue(str(2*A) == '[0.6:1.2:1.8]')
-        self.assertTrue(str(old_div(B,3)) == '[0.0333333333333:0.05:0.06]')
+        self.assertTrue(str(utils.old_div(B,3)) == '[0.0333333333333:0.05:0.06]')
 
 
 

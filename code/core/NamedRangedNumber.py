@@ -7,7 +7,7 @@ from __future__ import division
 from builtins import str
 from builtins import map
 from builtins import object
-from utilities import old_div
+import utilities as utils
 import re
 import core
 
@@ -123,9 +123,9 @@ class NamedRangedNumber(object):
     def __div__(self,other):
         "NamedRangedNumber value division."
         if isinstance(other, NamedRangedNumber):
-            v = old_div(self.value, other.value)
+            v = utils.old_div(self.value, other.value)
         else:
-            v = old_div(self.value, other)
+            v = utils.old_div(self.value, other)
         return NamedRangedNumber(self.names, v)
 
 
@@ -166,9 +166,9 @@ class NamedRangedNumber(object):
     def div(self,other):
         "NamedRangedNumber value division."
         if isinstance(other, NamedRangedNumber):
-            self.value = old_div(self.value, other.value)
+            self.value = utils.old_div(self.value, other.value)
         else:
-            self.value = old_div(self.value, other)
+            self.value = utils.old_div(self.value, other)
 
 
 

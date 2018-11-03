@@ -10,7 +10,6 @@ from __future__ import division
 
 from builtins import str
 from builtins import range
-from utilities import old_div
 import unittest, os, copy, shelve, sys, traceback, re
 import matplotlib, numpy, difflib
 import matplotlib.pyplot as plt
@@ -1025,7 +1024,7 @@ def compareGraph(reactionList1, reactionList2, reactionList3, maxPlot, titleFig=
     
     plt.ylabel('Flux (mmol/gdw/h)')
     plt.title('Minimum and maximum values for exchange fluxes')
-    plt.xticks(ind+old_div(width,2.),tuple(names),rotation='vertical')
+    plt.xticks(ind+utils.old_div(width,2.),tuple(names),rotation='vertical')
     plt.legend( (p2[0], p1[0], p4[0], p3[0], p6[0], p5[0]),
                ('Max. stoich. + LFTC + $^{13}$C data', 'Min. stoich. + LFTC + $^{13}$C data','Max. stoich. + lim. flux to core (LFTC)', 'Min. stoich. + lim. flux to core (LFTC)','Max. only stoich.', 'Min. only stoich.'),
                prop={'size':18})
@@ -1099,8 +1098,8 @@ def getFigure(number,saved=True):
             DTS = abs(fluxDictTSPPP[name].net.hi  - fluxDictTSPPP[name].net.lo)
             DFVA= abs(fluxDictFVAPPP[name].net.hi - fluxDictFVAPPP[name].net.lo)
             if DFVA !=0 :
-                QfluxPPP.append(old_div(DTS,DFVA))
-        QPPP = old_div(float(sum(QfluxPPP)),len(QfluxPPP))
+                QfluxPPP.append(utils.old_div(DTS,DFVA))
+        QPPP = utils.old_div(float(sum(QfluxPPP)),len(QfluxPPP))
         print('TS is '+str(QPPP)+' % of FVA')
       
         ##### Glycolysis plot                                              # Duplicated code, but ok for the moment being
@@ -1123,8 +1122,8 @@ def getFigure(number,saved=True):
             DTS = abs(fluxDictTSGLYC[name].net.hi  - fluxDictTSGLYC[name].net.lo)
             DFVA= abs(fluxDictFVAGLYC[name].net.hi - fluxDictFVAGLYC[name].net.lo)
             if DFVA !=0 :
-                QfluxGLYC.append(old_div(DTS,DFVA))
-        QGLYC = old_div(float(sum(QfluxGLYC)),len(QfluxGLYC))
+                QfluxGLYC.append(utils.old_div(DTS,DFVA))
+        QGLYC = utils.old_div(float(sum(QfluxGLYC)),len(QfluxGLYC))
         print('TS is '+str(QGLYC)+' % of FVA')
     
     elif number == 6:
@@ -1461,7 +1460,7 @@ def getSuppFigure(number,saved=True):
                 TSmodel   = getTSmodel(strain)    
                 TSresults = TSmodel.findFluxesRanges(Nrep=Nreplicates,fluxNames=fluxNames, procString='proc') 
                 OFs.append(TSresults.OF)
-            OFsAv[Nreplicates] = old_div(sum(OFs),float(len(OFs)))
+            OFsAv[Nreplicates] = utils.old_div(sum(OFs),float(len(OFs)))
 
         # Assemble graph
         x = []

@@ -17,7 +17,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import range
 from builtins import object
-from utilities import old_div
+import utilities as utils
 import re
 import math
 
@@ -280,7 +280,7 @@ class FluxMap(object):
 			v = (8 * math.log((v * 0.33) + 2)) + 1.63
 		# Below x=2/3, we approach 8 on a sharp curve that inflects at around x=1/3
 		else:
-			j = 1 - math.sin((old_div(math.pi,2.1))*v)
+			j = 1 - math.sin((utils.old_div(math.pi,2.1))*v)
 			v = 8 - (8 * (j*j*j))
 		return v
 
@@ -446,19 +446,19 @@ class FluxMap(object):
 				scaledFlux	= self.fluxToArrowScaler(abs(fluxValue))
 
 				# Then we use that to find the start width and the end width
-				wStart = min(2.0,old_div(scaledFlux,2))
+				wStart = min(2.0,utils.old_div(scaledFlux,2))
 				wEnd = max(scaledFlux,0.5)
 
 				# Report what we're doing
 				self.logStrings.append("Building paths for " + name + " fluxValue " + str(fluxValue) + " wStart " + str(wStart) + " wEnd " + str(wEnd))
 
 				# Rebuild the path as the definition for a solid shape
-				newPOffset = old_div(wEnd,2)
-				newPStart = old_div(wStart,wEnd)
+				newPOffset = utils.old_div(wEnd,2)
+				newPStart = utils.old_div(wStart,wEnd)
 				newPEnd = 1
 				if fluxValue < 0:
 					newPStart = 1
-					newPEnd = old_div(wStart,wEnd)
+					newPEnd = utils.old_div(wStart,wEnd)
 				offsetPath = parsedPath.simpleOffestPathToShape(newPOffset, 0-newPOffset, newPStart, newPEnd)
 				# Embed it back in the original SVG path element
 				q.set('d', offsetPath.getPathFragment())

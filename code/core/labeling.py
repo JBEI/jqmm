@@ -10,7 +10,6 @@ from __future__ import division
 from builtins import str
 from builtins import range
 from builtins import object
-from utilities import old_div
 import re
 import numpy, random
 import DB
@@ -164,7 +163,7 @@ class labelingData(object):
     def normalize(self):
         total = sum(self.mdv)
         if total != 0:
-            self.mdv   = old_div(self.mdv, total)
+            self.mdv   = utils.old_div(self.mdv, total)
          
         # Update line        
         self.line = self.getLine()

@@ -13,7 +13,6 @@ from __future__ import division
 from builtins import zip
 from builtins import str
 from builtins import range
-from utilities import old_div
 from builtins import object
 import core, GAMSclasses, ReactionNetworks
 import math, copy, re
@@ -231,7 +230,7 @@ class ReactionList(object):
 
     def __div__(self,other):
         "reaction reverse divison"
-        result = self.__rmul__(old_div(1,other))
+        result = self.__rmul__(utils.old_div(1,other))
         return result    
     
 
@@ -505,18 +504,18 @@ class ReactionList(object):
                 if level == 1:
                     r = reaction.flux.getComp(fluxComp,rangeComp)
                     if not isinstance(r, str):  # Might be "NA" or similar, in which case normalization doesn't apply
-                        r = old_div(r, norm)
+                        r = utils.old_div(r, norm)
                     fluxDict[reaction.name] = r
                 else:
                     if reaction.reversible and not reaction.exchange:
-                        fluxDict[reaction.name+"_f"] = old_div(reaction.flux.getComp('forward' ,rangeComp), norm)
-                        fluxDict[reaction.name+"_b"] = old_div(reaction.flux.getComp('backward',rangeComp), norm)
+                        fluxDict[reaction.name+"_f"] = utils.old_div(reaction.flux.getComp('forward' ,rangeComp), norm)
+                        fluxDict[reaction.name+"_b"] = utils.old_div(reaction.flux.getComp('backward',rangeComp), norm)
                     else:
-                        fluxDict[reaction.name] = old_div(reaction.flux.getComp('net' ,rangeComp), norm)
+                        fluxDict[reaction.name] = utils.old_div(reaction.flux.getComp('net' ,rangeComp), norm)
         else:
         # TODO: fluxcomp, rangecomp options should be worked out for THIS ONE!!!        
             for reaction in reactions:
-                fluxDict[reaction.name] = old_div(reaction.flux,norm)
+                fluxDict[reaction.name] = utils.old_div(reaction.flux,norm)
         return fluxDict
 
 
@@ -804,9 +803,9 @@ class ReactionList(object):
                 for attrib in attribs:
                     entry = getattr(newReaction.fluxBounds,attrib)
                     if isinstance(entry, core.rangedNumber):
-                        entry.lo   = old_div(entry.lo, abs(inFluxRef))
-                        entry.best = old_div(entry.best, abs(inFluxRef))
-                        entry.hi   = old_div(entry.hi, abs(inFluxRef))
+                        entry.lo   = utils.old_div(entry.lo, abs(inFluxRef))
+                        entry.best = utils.old_div(entry.best, abs(inFluxRef))
+                        entry.hi   = utils.old_div(entry.hi, abs(inFluxRef))
                 # Add to new set of reactions
                 newReactions.append(newReaction)
                 
@@ -955,8 +954,8 @@ class ReactionList(object):
             val      = reaction.flux.getComp('net','best')
             otherVal = otherReactionDict[reaction.name].flux.getComp('net','best')
             delta    = 1
-            ED       = ED + (old_div((val-otherVal),delta))**2
-        ED = old_div(math.sqrt(ED),math.sqrt(len(self.reactions)))
+            ED       = ED + (utils.old_div((val-otherVal),delta))**2
+        ED = utils.old_div(math.sqrt(ED),math.sqrt(len(self.reactions)))
         
         return ED
 
@@ -1060,7 +1059,7 @@ class ReactionList(object):
 
         plt.ylabel('Flux (mmol/gdw/h)')
         plt.title('Minimum and maximum values for exchange fluxes')
-        plt.xticks(ind+old_div(width,2.),tuple(names),rotation='vertical')
+        plt.xticks(ind+utils.old_div(width,2.),tuple(names),rotation='vertical')
         plt.legend( (p1[0], p2[0]), ('Minimum', 'Maximum') )
 
         title(titleFig)
@@ -1657,7 +1656,7 @@ class AtomTransitionList(object):
                     # Eliminate duplicates and add contributions       
                     tmpEMUTrans = list(set(EMUtransIn))  
                     nEMUTrans = len(tmpEMUTrans)
-                    newEMUTrans = [(old_div(1.,nEMUTrans),EMUTrans) for EMUTrans in tmpEMUTrans]    
+                    newEMUTrans = [(utils.old_div(1.,nEMUTrans),EMUTrans) for EMUTrans in tmpEMUTrans]
                     EMUTransitions.extend(newEMUTrans)
                         
                 # Find origin EMUs and do the same for them

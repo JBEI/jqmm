@@ -8,7 +8,6 @@ Minimization of Metabolic Adjustment (MoMA, Segre et al PNAS 2002) or Regulatory
 """
 from __future__ import division
 
-from utilities import old_div
 import os
 import FluxModels, GAMSclasses, core, ReactionNetworks
 import utilities as utils
@@ -242,7 +241,7 @@ def predict(results,geneName,method='MOMA',sbmlFileName='default'):
         fluxDict = results.reactionNetwork.reactionList.getFluxDictionary(rangeComp='all')  
     
     for reaction in TSModel.reactionNetwork.C13ReacNet.reactionList:
-        net           = rangedFluxDictAll[reaction.name].net*(old_div(1,inFluxRef))
+        net           = rangedFluxDictAll[reaction.name].net*(utils.old_div(1,inFluxRef))
         exch          = fluxDict[reaction.name].exchange
         reaction.flux = core.flux(net_exc_tup=(net,exch))  
          

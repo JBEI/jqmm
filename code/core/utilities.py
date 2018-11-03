@@ -18,7 +18,10 @@ import numpy
 
 
 def old_div(a, b):
-    return a//b
+    if not (isinstance(a, int) or isinstance(a, float) or isinstance(a, long)):
+        return a.__div__(b)
+    else:
+        return a//b
 
 def is_float(s):
     """
@@ -398,13 +401,13 @@ def fluxPlotGraph(inputList,subsystemList,titleFig='',save='default',plotType=1,
         plot([xlim,xlim],axesRanges,'k--')   # initial black separator line
         for subsystem in subsystemList:        
             # Separator plot   
-            xmid = xlim + old_div(len(subsysDict[subsystem].reactions),2)     # Coordinates for subsystem acronym        
+            xmid = xlim + utils.old_div(len(subsysDict[subsystem].reactions),2)     # Coordinates for subsystem acronym
             xlim = xlim + len(subsysDict[subsystem].reactions)       # Coordinates for separator 
-            plot([xlim+old_div(1,2.),xlim+old_div(1,2.)],axesRanges,'k--')                 # Black separator lines
+            plot([xlim+utils.old_div(1,2.),xlim+utils.old_div(1,2.)],axesRanges,'k--')                 # Black separator lines
             # Subsystem acronym plot
             name = subsystem.replace('S_','').replace('_','')
             name = ''.join(w for w in name if w.isupper())         # Keep only capital letters
-            text(xmid+0.9, old_div(axesRanges[1],2), name, fontproperties=font1, horizontalalignment='center')
+            text(xmid+0.9, utils.old_div(axesRanges[1],2), name, fontproperties=font1, horizontalalignment='center')
     else:
         xlim = xlim + len(subsysDict[subsystemList[0]].reactions)     
     
@@ -498,7 +501,7 @@ def histcomp(Dict1,Dict2,fragments,outputFileName,titleFig,OF,save):
     fig = figure(figsize=(20,10))
     fig.suptitle(titleFig+" (OF= "+str(OF)+"), Exp(red)/Comp(blue)",fontsize=20,fontweight='bold')
 
-    ymax  = old_div(int(len(fragments)),5)+1
+    ymax  = utils.old_div(int(len(fragments)),5)+1
     index = 1
     for fragment in sorted(fragments):
         if fragment in Dict1 and fragment in Dict2:

@@ -11,7 +11,6 @@ from __future__ import division
 from builtins import next
 from builtins import str
 from builtins import range
-from utilities import old_div
 from builtins import object
 import os, time, copy, numpy, re, matplotlib, unittest
 import GAMSclasses, ReactionNetworks, core, DB, enhancedLists, labeling
@@ -939,7 +938,7 @@ class TwoSC13Model(C13Model):
 
             for met,fluxinout,coreFlux in metsNonZeroTuple:
                 ncarb = carbondict[met]            
-                value = abs(old_div(fluxinout,inFluxRef))
+                value = abs(utils.old_div(fluxinout,inFluxRef))
                 if fluxinout < 0:
                     name  = "RO" + met
                     line  = name + "\t" + met + " --> Out"+met+  "\t"  +carbonstr[0:ncarb]+" : "+carbonstr[0:ncarb]
@@ -1041,7 +1040,7 @@ class TwoSC13Model(C13Model):
         inFluxRef = self.reactionNetwork.inFluxRef 
         #    core reactions
         for name in list(fluxDict.keys()):
-            fluxDict[name] = old_div(fluxDict[name],inFluxRef)             
+            fluxDict[name] = utils.old_div(fluxDict[name],inFluxRef)
         self.reactionNetwork.C13ReacNet.reactionList.addFluxes(fluxDict)
         self.reactionNetwork.C13ReacNet.reactionList.zeroFluxExchange()
 
@@ -1454,7 +1453,7 @@ class Results(object):
         orientations = []
         
         for i in range(len(newLabels)):
-            if i < old_div((len(newLabels)),2):
+            if i < utils.old_div((len(newLabels)),2):
                  orientations.append(-1)
             else:
                   orientations.append(1)
@@ -1834,7 +1833,7 @@ class ELVAResults(Results):
                                 
                 for m in range(min(len(mdv),len(MDVfit))):
                     x.append(mdv[m])
-                    Dx.append(old_div(std[m],2))
+                    Dx.append(utils.old_div(std[m],2))
                     y.append(MDVfit[m])
                     DyU.append( (labelMinMax[abbrev][str(m)][1]-MDVfit[m]))
                     DyL.append(-(labelMinMax[abbrev][str(m)][0]-MDVfit[m]))

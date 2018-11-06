@@ -9,7 +9,7 @@ from builtins import range
 from builtins import object
 import re, copy, numpy, math, string, unittest
 import enhancedLists, Genes, Proteins, DB
-import utilities as util
+import utilities as utils
 
 
 "##################################"

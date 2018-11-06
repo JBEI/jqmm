@@ -18,7 +18,7 @@ import numpy
 
 
 def old_div(a, b):
-    if not (isinstance(a, int) or isinstance(a, float) or isinstance(a, long)):
+    if not (isinstance(a, int) or isinstance(a, float)):
         return a.__div__(b)
     else:
         return a//b

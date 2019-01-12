@@ -27,6 +27,8 @@ class SBMLImporter(object):
 
         self.metList = None
         self.reactionList = None
+        self.masterGeneSet = None
+        self.masterProteinSet = None
 
         self.initialSetFluxesCount = None
         self.initialBoundedFluxesCount = None
@@ -145,6 +147,8 @@ class SBMLImporter(object):
         closely_bounded_fluxes_count = 0
 
         reactions = []
+        masterGeneSet = []
+        masterProteinSet = []
         for rxn in listOfReactions:
             rxnNameOrig     = rxn.getId().replace('R_','',1).replace('_e_','(e)',1)
             rxnName         = core.ReactionName(rxnNameOrig)
@@ -242,6 +246,11 @@ class SBMLImporter(object):
             if not flux:
                 flux = fluxBounds
 
+
+            # append gene and protein sets to the master gene and protein sets
+            masterGeneSet.append(geneSets)
+            masterProteinSet.append(proteinSets)
+
             # Instantiating reaction
             new_reaction = core.Reaction(rxnName, rxn.getReversible(), False, measured, flux=flux, fluxBounds=fluxBounds,
                                      transitionLine=transitionLine, exchange=exchangeReaction, reactants=reacts, products=prods,
@@ -250,6 +259,8 @@ class SBMLImporter(object):
 
         self.metList      = metList
         self.reactionList = enhancedLists.ReactionList(reactions)
+        self.masterGeneSet = masterGeneSet
+        self.masterProteinSet = masterProteinSet
 
         self.initialSetFluxesCount     = set_fluxes_count
         self.initialBoundedFluxesCount = bounded_fluxes_count

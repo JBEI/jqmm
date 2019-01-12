@@ -39,6 +39,8 @@ class ReactionNetwork(object):
         self.notes        = {}
         self.metList      = []
         self.reactionList = []
+        self.geneSet = None
+        self.proteinSet = None
 
         errorCount = 0
         logStrings = []
@@ -74,6 +76,8 @@ class ReactionNetwork(object):
                 self.notes        = sbmlImporter.model_notes
                 self.metList      = sbmlImporter.metList
                 self.reactionList = sbmlImporter.reactionList
+                self.geneSet      = sbmlImporter.masterGeneSet
+                self.proteinSet   = sbmlImporter.masterProteinSet
 
                 self.errorCount   = sbmlImporter.errorCount
                 self.logStrings   = sbmlImporter.logStrings

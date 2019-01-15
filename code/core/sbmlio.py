@@ -213,7 +213,8 @@ class SBMLImporter(object):
                 if geneString != "":
                     # is a list of GeneSets
                     geneSets = Genes.GeneSet.createSetsFromStrings(geneString, geneValueString)
-                    masterGeneSet.recastSet(geneSets)
+                    for geneSet in geneSets:
+                        masterGeneSet.recastSet(geneSet)
 
             proteinSets = []
             if proteinString:
@@ -224,7 +225,8 @@ class SBMLImporter(object):
                 if proteinString != "":
                     # is a list of ProteinSets
                     proteinSets = Proteins.ProteinSet.createSetsFromStrings(proteinString, geneString, proteinValueString)
-                    masterProteinSet.recastSet(proteinSets)
+                    for proteinSet in proteinSets:
+                        masterProteinSet.recastSet(proteinSet)
 
             #  Measured fluxes (MeasFluxes for 13CMFA, UB and LB for 2S-13CMFA or FBA)
             cval = 0

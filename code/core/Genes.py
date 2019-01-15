@@ -111,6 +111,7 @@ class GeneSet(NamedRangedNumber.NamedRangedNumberSet):
                     items.append(item)
                 if items:
                     subSets.append(GeneSet(items))
+        # is a list of GeneSets
         return subSets
 
 

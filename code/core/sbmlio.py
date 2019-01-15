@@ -147,14 +147,16 @@ class SBMLImporter(object):
         closely_bounded_fluxes_count = 0
 
         reactions = []
-        masterGeneSet = []
-        masterProteinSet = []
+        masterGeneSet    = Genes.GeneSet()
+        masterProteinSet = Proteins.ProteinSet()
+
+        # For each reaction in the list of reactions, extract the associated data
         for rxn in listOfReactions:
             rxnNameOrig     = rxn.getId().replace('R_','',1).replace('_e_','(e)',1)
             rxnName         = core.ReactionName(rxnNameOrig)
             exchangeReaction = True if rxnName[0:3] == 'EX_' else False 
 
-            # Stoichiometry
+            # Stoichiometry (reactants and products)
             sbml_reactants = rxn.getListOfReactants()
             reacts = []
             for sbml_reactant in sbml_reactants:
@@ -172,7 +174,7 @@ class SBMLImporter(object):
                 prod = core.Product(metabolite, sbml_product.getStoichiometry())
                 prods.append(prod)
                     
-            #  Carbon Transitions and other notes
+            #  Carbon Transitions and other notes including genes and protein sets
             transitionLine = 'None'
             subsystem = 'None'
             flux = None
@@ -209,7 +211,10 @@ class SBMLImporter(object):
                 if geneString.lower() in ["none", "n.a.", "n/a"]:
                     geneString = ""
                 if geneString != "":
+                    # is a list of GeneSets
                     geneSets = Genes.GeneSet.createSetsFromStrings(geneString, geneValueString)
+                    masterGeneSet.recastSet(geneSets)
+
             proteinSets = []
             if proteinString:
                 proteinString = re.sub('^\s*:','', proteinString) # Chop off any bogus colon
@@ -217,7 +222,9 @@ class SBMLImporter(object):
                 if proteinString.lower() in ["none", "n.a.", "n/a"]:
                     proteinString = ""
                 if proteinString != "":
+                    # is a list of ProteinSets
                     proteinSets = Proteins.ProteinSet.createSetsFromStrings(proteinString, geneString, proteinValueString)
+                    masterProteinSet.recastSet(proteinSets)
 
             #  Measured fluxes (MeasFluxes for 13CMFA, UB and LB for 2S-13CMFA or FBA)
             cval = 0
@@ -248,10 +255,11 @@ class SBMLImporter(object):
 
 
             # append gene and protein sets to the master gene and protein sets
-            masterGeneSet.append(geneSets)
-            masterProteinSet.append(proteinSets)
+            # !!!!!!!ALERT!!!! masterGeneSet is a list of list of geneSets now. Should be a geneSet with all genes in it
+            # masterGeneSet.append(geneSets)
+            # masterProteinSet.append(proteinSets)
 
-            # Instantiating reaction
+            # Instantiating reaction object
             new_reaction = core.Reaction(rxnName, rxn.getReversible(), False, measured, flux=flux, fluxBounds=fluxBounds,
                                      transitionLine=transitionLine, exchange=exchangeReaction, reactants=reacts, products=prods,
                                      cval=cval, subsystem=subsystem, gene=geneSets, protein=proteinSets, extraNotes=rxnNotes)

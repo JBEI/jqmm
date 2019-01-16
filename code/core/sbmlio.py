@@ -213,6 +213,7 @@ class SBMLImporter(object):
                 if geneString != "":
                     # is a list of GeneSets
                     geneSets = Genes.GeneSet.createSetsFromStrings(geneString, geneValueString)
+                    # could this be done more efficiently?
                     for geneSet in geneSets:
                         masterGeneSet.recastSet(geneSet)
 

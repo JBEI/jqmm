@@ -16,6 +16,9 @@ from __future__ import division
 # In the future, Python will switch to always yielding a real result,
 # and to force an integer division operation you use the special "//"
 # integer division operator.
+from builtins import zip
+from builtins import range
+from builtins import object
 from math import sqrt, cos, sin, acos, degrees, radians, pi
 from collections import MutableSequence
 

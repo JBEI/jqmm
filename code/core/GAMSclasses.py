@@ -5,14 +5,18 @@
 The GAMSclasses module is the connection to the GAMS system (General Algebraic Modeling System, https://www.gams.com/) used to solve optimizatin problems.
 This module should soon be adapted to the GAMS python API: https://www.gams.com/help/index.jsp?topic=%2Fgams.doc%2Fapis%2Findex.html
 """
+from __future__ import print_function
 
+from builtins import str
+from builtins import range
+from builtins import object
 import os,time,re,numpy,subprocess, unittest
 from utilities import file2tuple
 import core, enhancedLists
 
 # GAMS sets, parameters and tables form the basis of problems defined in GAMS. 
 # Class for GAMS sets
-class GAMSSet:
+class GAMSSet(object):
     def __init__(self,name,inset):
         # Checking types
         if not isinstance(name,str):
@@ -66,7 +70,7 @@ class GAMSSet:
 
 
 # Class for GAMS parameters
-class GAMSParameter:
+class GAMSParameter(object):
     def __init__(self, name, elements):
         # Checking types
         if not isinstance(name,str):
@@ -154,7 +158,7 @@ def GAMSParameterFromResult(input):
 
 
 
-class GAMSTable:
+class GAMSTable(object):
     "Class for GAMS tables"
     def __init__(self, name, xkeys, ykeys, array):
         # Checking types 
@@ -229,7 +233,7 @@ class GAMSTable:
 
 
 
-class GAMSTableKeys:
+class GAMSTableKeys(object):
     "Auxiliary class for table keys for GAMS table"
     def __init__(self, name, values):
         # Checking types 
@@ -246,7 +250,7 @@ class GAMSTableKeys:
 # Class for GAMS problems
 globalGAMSRunCount = 0   # Global variable so as to get unique directory names
 
-class GAMSProblem:
+class GAMSProblem(object):
     def __init__(self,name,gamsfile,includeFiles,outputFuncs,execType='parallel',directory='',erase=False):
         "gamsfile or includeFiles can be either filenames or tuples of filenames and strings with file content: (filename, string)"
         # Storing
@@ -382,8 +386,8 @@ class GAMSProblem:
  
         status  = os.system(call)
         if status != 0:
-            print "call:"
-            print call
+            print("call:")
+            print(call)
             raise Exception('GAMS process launch failed')
         
         # Flagging as started
@@ -495,7 +499,7 @@ class GAMSProblem:
     
 
 # Class for a batch of GAMS problems
-class GAMSProblemBatch:
+class GAMSProblemBatch(object):
     def __init__(self, gamsProblems, erase=True):
         self.problems = gamsProblems
         self.erase = erase
@@ -837,7 +841,7 @@ class labelingGAMSpar(GAMSParameter):
 
 
 
-class GAMSProblemInfo:
+class GAMSProblemInfo(object):
     " Class for info in GAMSProblem "
 
     def __init__(self,OF,solvestat,modelstat,numequ,numnz,numvar,resusd):

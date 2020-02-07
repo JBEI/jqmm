@@ -5,6 +5,10 @@
 The sbmlio module provides support for input/output of ReactionNetwork structures in SBML format.
 """
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import re
 import core, DB, enhancedLists, labeling
 import Genes, Proteins
@@ -12,7 +16,7 @@ import utilities as utils
 import libsbml
 
 
-class SBMLImporter:
+class SBMLImporter(object):
     """
     Helper class to parse the given string as SBML and extract various structures important to a ReactionNetwork.
     """
@@ -23,6 +27,8 @@ class SBMLImporter:
 
         self.metList = None
         self.reactionList = None
+        self.masterGeneSet = None
+        self.masterProteinSet = None
 
         self.initialSetFluxesCount = None
         self.initialBoundedFluxesCount = None
@@ -141,12 +147,16 @@ class SBMLImporter:
         closely_bounded_fluxes_count = 0
 
         reactions = []
+        masterGeneSet    = Genes.GeneSet()
+        masterProteinSet = Proteins.ProteinSet()
+
+        # For each reaction in the list of reactions, extract the associated data
         for rxn in listOfReactions:
             rxnNameOrig     = rxn.getId().replace('R_','',1).replace('_e_','(e)',1)
             rxnName         = core.ReactionName(rxnNameOrig)
             exchangeReaction = True if rxnName[0:3] == 'EX_' else False 
 
-            # Stoichiometry
+            # Stoichiometry (reactants and products)
             sbml_reactants = rxn.getListOfReactants()
             reacts = []
             for sbml_reactant in sbml_reactants:
@@ -164,7 +174,7 @@ class SBMLImporter:
                 prod = core.Product(metabolite, sbml_product.getStoichiometry())
                 prods.append(prod)
                     
-            #  Carbon Transitions and other notes
+            #  Carbon Transitions and other notes including genes and protein sets
             transitionLine = 'None'
             subsystem = 'None'
             flux = None
@@ -201,7 +211,12 @@ class SBMLImporter:
                 if geneString.lower() in ["none", "n.a.", "n/a"]:
                     geneString = ""
                 if geneString != "":
+                    # is a list of GeneSets
                     geneSets = Genes.GeneSet.createSetsFromStrings(geneString, geneValueString)
+                    # could this be done more efficiently?
+                    for geneSet in geneSets:
+                        masterGeneSet.recastSet(geneSet)
+
             proteinSets = []
             if proteinString:
                 proteinString = re.sub('^\s*:','', proteinString) # Chop off any bogus colon
@@ -209,7 +224,10 @@ class SBMLImporter:
                 if proteinString.lower() in ["none", "n.a.", "n/a"]:
                     proteinString = ""
                 if proteinString != "":
+                    # is a list of ProteinSets
                     proteinSets = Proteins.ProteinSet.createSetsFromStrings(proteinString, geneString, proteinValueString)
+                    for proteinSet in proteinSets:
+                        masterProteinSet.recastSet(proteinSet)
 
             #  Measured fluxes (MeasFluxes for 13CMFA, UB and LB for 2S-13CMFA or FBA)
             cval = 0
@@ -238,7 +256,13 @@ class SBMLImporter:
             if not flux:
                 flux = fluxBounds
 
-            # Instantiating reaction
+
+            # append gene and protein sets to the master gene and protein sets
+            # !!!!!!!ALERT!!!! masterGeneSet is a list of list of geneSets now. Should be a geneSet with all genes in it
+            # masterGeneSet.append(geneSets)
+            # masterProteinSet.append(proteinSets)
+
+            # Instantiating reaction object
             new_reaction = core.Reaction(rxnName, rxn.getReversible(), False, measured, flux=flux, fluxBounds=fluxBounds,
                                      transitionLine=transitionLine, exchange=exchangeReaction, reactants=reacts, products=prods,
                                      cval=cval, subsystem=subsystem, gene=geneSets, protein=proteinSets, extraNotes=rxnNotes)
@@ -246,6 +270,8 @@ class SBMLImporter:
 
         self.metList      = metList
         self.reactionList = enhancedLists.ReactionList(reactions)
+        self.masterGeneSet = masterGeneSet
+        self.masterProteinSet = masterProteinSet
 
         self.initialSetFluxesCount     = set_fluxes_count
         self.initialBoundedFluxesCount = bounded_fluxes_count
@@ -256,7 +282,7 @@ class SBMLImporter:
 
 
 
-class SBMLExporter:
+class SBMLExporter(object):
     """
     Helper class to render the given ReactionNetwork as an SBML string on-demand.
     """

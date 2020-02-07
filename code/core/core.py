@@ -1,7 +1,12 @@
+from __future__ import print_function
+from __future__ import division
 # Part of the JBEI Quantitative Metabolic Modeling Library (JQMM)
 # Copyright (c) 2016, The Regents of the University of California.
 # For licensing details see "license.txt" and "legal.txt".
 
+from builtins import str
+from builtins import range
+from builtins import object
 import re, copy, numpy, math, string, unittest
 import enhancedLists, Genes, Proteins, DB
 import utilities as utils
@@ -25,7 +30,7 @@ TRANSCRIPTOMICS_SIGNIFICANCE_THRESHOLD = 80 # Must be 80 or above
 PROTEOMICS_SIGNIFICANCE_THRESHOLD = 0       # Must be above 0
 
 
-class Metabolite():
+class Metabolite(object):
     """
     Class for metabolites. This class has been created for metabolites involved in 13C MFA and FBA. 
     In init:
@@ -95,7 +100,7 @@ class Metabolite():
         if ncarbons <= 0:
             raise Exception('Metabolite %s has %s carbon atoms' % (str(self.name), str(ncarbons)))
             
-        clist = range(1,ncarbons+1)
+        clist = list(range(1,ncarbons+1))
         for exc in exceptions:
             try:
                 clist.remove(int(exc))
@@ -129,7 +134,7 @@ class Product(Reactant):
 
 
 
-class Reaction():    
+class Reaction(object):    
     """
     Class for reactions. This class has been created for reactions involved in 13C MFA and FBA.
     In init:
@@ -302,12 +307,12 @@ class Reaction():
         
         for react in reacts:
             if not react.name in reactsSBMLDict:
-                print reactsSBMLDict
+                print(reactsSBMLDict)
                 raise Exception('Reactant '+react.name+' present in transitions line but not in reaction: '+self.name+':\n'+self.stoichLine())
         for prod in prods:
             if not self.exchange:   # product are not included for exchange reactions in sbml
                 if not prod.name in prodsSBMLDict:
-                    print prodsSBMLDict
+                    print(prodsSBMLDict)
                     raise Exception('Product '+prod.name+' present in transitions line but not in reaction: '+self.name+':\n'+self.stoichLine())
         
         # Reversibilities
@@ -344,18 +349,18 @@ class Reaction():
 
         for react in reactsSBML:  
             if (react.name in reactsSBMLDict) and (react.name in coremets) and not(react.name in reactsDict): 
-                print react.name
-                print reactsDict
-                print self.stoichLine()
-                print self.transitionLine
+                print(react.name)
+                print(reactsDict)
+                print(self.stoichLine())
+                print(self.transitionLine)
                 raise Exception('Reactant '+react.name+' present in core metabolites and in stochiometry but not in transitions for reaction: '+self.name)
         for prod in prodsSBML:
             if not self.exchange:   # product are not included for exchange reactions in sbml
                 if (prod.name in prodsSBMLDict) and (prod.name in coremets) and not(prod.name in prodsDict):
-                    print prod.name
-                    print prodsDict
-                    print self.stoichLine()
-                    print self.transitionLine
+                    print(prod.name)
+                    print(prodsDict)
+                    print(self.stoichLine())
+                    print(self.transitionLine)
                     raise Exception('Product '+prod.name+' present in core metabolites and in stochiometry but not in transitions for reaction: '+self.name)
 
 
@@ -520,7 +525,7 @@ class ReactionName(str):
 
 
 
-class EMU(): # TODO(Hector): redo, holding the Metabolite instance?
+class EMU(object): # TODO(Hector): redo, holding the Metabolite instance?
     """
     Class for Elementary Metabolite Units (EMUs) as defined in 
     Antoniewicz MR, Kelleher JK, Stephanopoulos G: Elementary metabolite units (EMU): a novel framework for modeling isotopic distributions.
@@ -625,7 +630,7 @@ class EMU(): # TODO(Hector): redo, holding the Metabolite instance?
 # ATOM AND EMU TRANSITIONS
 ##################################
 
-class EMUTransition():
+class EMUTransition(object):
     """
     Class for EMU transitions that contain information on how different EMUs transform intto each other. For example:
     
@@ -665,7 +670,7 @@ class EMUTransition():
                 first = float(parse[0])
                 for number in parse:     
                     if float(number)!=first:
-                        print 'All contribution coefficients must be the same: \n'+ line
+                        print('All contribution coefficients must be the same: \n'+ line)
                 self.contribution = first
                 # Eliminating contribution coefficients    
                 rest = rest.replace('('+str(first)+')','')                
@@ -710,7 +715,7 @@ class EMUTransition():
 
 
 
-class AtomTransition():  
+class AtomTransition(object):  
     """
     Class for line with transitions info, e.g.: 
     
@@ -860,8 +865,8 @@ class AtomTransition():
         name, reactLine, prodLine, rLabelLine, pLabelLine, reversible, sym = self.parseLine(line)
         reacts = [x.strip() for x in reactLine.split('+')]
         prods  = [x.strip() for x in prodLine.split('+')]
-        rLabel = map(lambda x: utils.symsplit(x.strip()) if ';' in x else x.strip(), rLabelLine.split('+'))
-        pLabel = map(lambda x: utils.symsplit(x.strip()) if ';' in x else x.strip(), pLabelLine.split('+'))        
+        rLabel = [utils.symsplit(x.strip()) if ';' in x else x.strip() for x in rLabelLine.split('+')]
+        pLabel = [utils.symsplit(x.strip()) if ';' in x else x.strip() for x in pLabelLine.split('+')]        
         
         # If there is a symmetric molecule
         if sym:
@@ -1195,7 +1200,7 @@ class AtomTransition():
 
 
 
-class rangedNumber:
+class rangedNumber(object):
     """
     A floating-point ranged number, with the value in 'best', and the range defined by 'lo' and 'hi' attributes.
     The "best" attribute needs to be a number, but "lo" and "hi" can be either a number or "None".
@@ -1351,17 +1356,17 @@ class rangedNumber:
     def __div__(self,other):
         "ranged number division"
         if utils.is_float(self.lo):
-            loNew = self.lo / other # Exception will automatically raise if other is None
+            loNew = utils.old_div(self.lo, other) # Exception will automatically raise if other is None
         else:
             loNew = None
         if utils.is_float(self.hi):
-            hiNew = self.hi / other
+            hiNew = utils.old_div(self.hi, other)
         else:
             hiNew = None
         if other >= 0:
-            result = rangedNumber(loNew, self.best / other, hiNew)
+            result = rangedNumber(loNew, utils.old_div(self.best, other), hiNew)
         else:
-            result = rangedNumber(hiNew, self.best / other, loNew)
+            result = rangedNumber(hiNew, utils.old_div(self.best, other), loNew)
         return result
 
 
@@ -1386,7 +1391,7 @@ class rangedNumber:
 
 
 
-class StoichMatrix():
+class StoichMatrix(object):
     "Class for stoichiometry matrices"
     
     def __init__(self,gamsParameter):
@@ -1450,7 +1455,7 @@ class StoichMatrix():
 
 
 # Flux classes
-class flux:
+class flux(object):
     """
     Class for flux information.
     """
@@ -1511,7 +1516,7 @@ class flux:
             net      = float(net)      if utils.is_float(net)   else net
             coeff    = float(coeff)    if utils.is_float(coeff) else coeff            
         
-            exchange  = coeff/(1-coeff) 
+            exchange  = utils.old_div(coeff,(1-coeff))
             
             # get value of net for comparison           
             try:
@@ -1555,7 +1560,7 @@ class flux:
                 attribDict[name] = newAttrib
 
         # Creating result
-        if len(attribDict.keys())==4:
+        if len(list(attribDict.keys()))==4:
             result = flux(for_back_tup=(attribDict['forward'],attribDict['backward']),net_exc_tup=(attribDict['net'],attribDict['exchange']))
         else:   
             if 'net' in attribDict and 'exchange' in attribDict:
@@ -1619,10 +1624,10 @@ class flux:
 
     def __div__(self,other):
         "flux division by scalar"
-        forward  = self.forward  if isinstance(self.forward, str)  else self.forward / other
-        backward = self.backward if isinstance(self.backward, str) else self.backward / other
-        net      = self.net      if isinstance(self.net, str)      else self.net / other
-        exchange = self.exchange if isinstance(self.exchange, str) else self.exchange / other
+        forward  = self.forward  if isinstance(self.forward, str)  else utils.old_div(self.forward, other)
+        backward = self.backward if isinstance(self.backward, str) else utils.old_div(self.backward, other)
+        net      = self.net      if isinstance(self.net, str)      else utils.old_div(self.net, other)
+        exchange = self.exchange if isinstance(self.exchange, str) else utils.old_div(self.exchange, other)
         
         newflux = flux((forward,backward),(net,exchange))
         return newflux        
@@ -1796,7 +1801,7 @@ class testRangedNumbers(unittest.TestCase):
         self.assertTrue(str(A+B) == '[0.445861873485:0.75:1.05149626863]')
         self.assertTrue(str(A-B) == '[0.145861873485:0.45:0.751496268634]')
         self.assertTrue(str(2*A) == '[0.6:1.2:1.8]')
-        self.assertTrue(str(B/3) == '[0.0333333333333:0.05:0.06]')
+        self.assertTrue(str(utils.old_div(B,3)) == '[0.0333333333333:0.05:0.06]')
 
 
 

@@ -6,15 +6,21 @@ The enhancedLists module provides classes with lists that have been enhanced wit
 therein. So, e.g. the reactionList class has a carbonTransitionsOK method that tests if carbon transition and reaction
 information are compatible.
 """
+from __future__ import print_function
+from __future__ import division
 
 
+from builtins import zip
+from builtins import str
+from builtins import range
+from builtins import object
 import core, GAMSclasses, ReactionNetworks
 import math, copy, re
 import numpy
 import utilities as utils
 
 
-class MetaboliteList():
+class MetaboliteList(object):
     "Class for list of metabolites in a reaction network. This is just a metabolite list with some useful functions atached to it."
 
     def __init__(self,mets):
@@ -81,7 +87,7 @@ class MetaboliteList():
             else:
                 temp_name = core.MetaboliteName(met.name)
                 compDict[temp_name.compartment] = True
-        return compDict.keys()
+        return list(compDict.keys())
 
 
     def getExcluded(self):
@@ -174,7 +180,7 @@ class MetaboliteList():
 
 
 
-class ReactionList():
+class ReactionList(object):
     """
     Class for a list of Reactions in a reaction network.
     This is just a reaction list with some useful functions attached to it.
@@ -224,7 +230,7 @@ class ReactionList():
 
     def __div__(self,other):
         "reaction reverse divison"
-        result = self.__rmul__(1/other)
+        result = self.__rmul__(utils.old_div(1,other))
         return result    
     
 
@@ -498,18 +504,18 @@ class ReactionList():
                 if level == 1:
                     r = reaction.flux.getComp(fluxComp,rangeComp)
                     if not isinstance(r, str):  # Might be "NA" or similar, in which case normalization doesn't apply
-                        r = r / norm
+                        r = utils.old_div(r, norm)
                     fluxDict[reaction.name] = r
                 else:
                     if reaction.reversible and not reaction.exchange:
-                        fluxDict[reaction.name+"_f"] = reaction.flux.getComp('forward' ,rangeComp) / norm
-                        fluxDict[reaction.name+"_b"] = reaction.flux.getComp('backward',rangeComp) / norm
+                        fluxDict[reaction.name+"_f"] = utils.old_div(reaction.flux.getComp('forward' ,rangeComp), norm)
+                        fluxDict[reaction.name+"_b"] = utils.old_div(reaction.flux.getComp('backward',rangeComp), norm)
                     else:
-                        fluxDict[reaction.name] = reaction.flux.getComp('net' ,rangeComp) / norm
+                        fluxDict[reaction.name] = utils.old_div(reaction.flux.getComp('net' ,rangeComp), norm)
         else:
         # TODO: fluxcomp, rangecomp options should be worked out for THIS ONE!!!        
             for reaction in reactions:
-                fluxDict[reaction.name] = reaction.flux/norm
+                fluxDict[reaction.name] = utils.old_div(reaction.flux,norm)
         return fluxDict
 
 
@@ -537,12 +543,12 @@ class ReactionList():
         #### Comparison out
         diff = set(fluxDictA.keys()) - set(fluxDictB.keys())      
         if diff:
-            print diff
+            print(diff)
         else:
             for key in fluxDictA:
                 if str(fluxDictA[key]) != str(fluxDictB[key]):
-                    print fluxDictA[key]
-                    print fluxDictB[key]  
+                    print(fluxDictA[key])
+                    print(fluxDictB[key])  
 
 
     def findCommonFluxes(self, fluxDictionary):
@@ -797,9 +803,9 @@ class ReactionList():
                 for attrib in attribs:
                     entry = getattr(newReaction.fluxBounds,attrib)
                     if isinstance(entry, core.rangedNumber):
-                        entry.lo   = entry.lo / abs(inFluxRef)
-                        entry.best = entry.best / abs(inFluxRef)
-                        entry.hi   = entry.hi / abs(inFluxRef)
+                        entry.lo   = utils.old_div(entry.lo, abs(inFluxRef))
+                        entry.best = utils.old_div(entry.best, abs(inFluxRef))
+                        entry.hi   = utils.old_div(entry.hi, abs(inFluxRef))
                 # Add to new set of reactions
                 newReactions.append(newReaction)
                 
@@ -948,8 +954,8 @@ class ReactionList():
             val      = reaction.flux.getComp('net','best')
             otherVal = otherReactionDict[reaction.name].flux.getComp('net','best')
             delta    = 1
-            ED       = ED + ((val-otherVal)/delta)**2
-        ED = math.sqrt(ED)/math.sqrt(len(self.reactions))
+            ED       = ED + (utils.old_div((val-otherVal),delta))**2
+        ED = utils.old_div(math.sqrt(ED),math.sqrt(len(self.reactions)))
         
         return ED
 
@@ -969,11 +975,11 @@ class ReactionList():
         
         # Fluxes to print
         if names == 'default':
-            names = Fluxes.keys()
+            names = list(Fluxes.keys())
         if names == 'exchange':
             tolerance = 0.0001
             names = []
-            for name in Fluxes.keys():
+            for name in list(Fluxes.keys()):
                 if (('EX_' in name) or ('iomass' in name)) and (abs(Fluxes[name].net.best) > tolerance):
                     names.append(name)            
         
@@ -989,7 +995,7 @@ class ReactionList():
         # Output
         if fileName == 'None':    # Print to screen
             for line in lines:
-               print line
+               print(line)
         elif fileName == 'toString':  # Print to string and return
             out = '\n'.join(lines)
             return out             
@@ -1053,7 +1059,7 @@ class ReactionList():
 
         plt.ylabel('Flux (mmol/gdw/h)')
         plt.title('Minimum and maximum values for exchange fluxes')
-        plt.xticks(ind+width/2.,tuple(names),rotation='vertical')
+        plt.xticks(ind+utils.old_div(width,2.),tuple(names),rotation='vertical')
         plt.legend( (p1[0], p2[0]), ('Minimum', 'Maximum') )
 
         title(titleFig)
@@ -1124,15 +1130,15 @@ class ReactionList():
     
             title(titleFig)    
         else:
-            print "No data in plot"
-            print x
-            print y        
+            print("No data in plot")
+            print(x)
+            print(y)        
 
         # return handle
         return hand
 
 
-class EMUList():
+class EMUList(object):
     """
     Class for list of emus in a reaction network. Like in the case for MetaboliteList and ReactionList, this is just an emu list with some useful functions atached to it.
     """
@@ -1168,7 +1174,7 @@ class EMUList():
 
 
 
-class EMUTransitionList():
+class EMUTransitionList(object):
     """
     Class for list of EMU transitions in a reaction network. Like in the case for MetaboliteList and ReactionList, 
     this is just an EMU transition list with some useful functions atached to it.
@@ -1420,7 +1426,7 @@ class EMUTransitionList():
                 errmsg = str(local[i]) + '\n vs \n' + str(new[i])
                 raise Exception('Different Lines:\n'+errmsg)
 
-        print "Both transition lists are the same"
+        print("Both transition lists are the same")
 
 
     def write(self,output='default'):
@@ -1440,7 +1446,7 @@ class EMUTransitionList():
 
 
 
-class AtomTransitionList:
+class AtomTransitionList(object):
     "Class for a list of AtomTransition objects"
 
     def __init__(self, input_):
@@ -1650,7 +1656,7 @@ class AtomTransitionList:
                     # Eliminate duplicates and add contributions       
                     tmpEMUTrans = list(set(EMUtransIn))  
                     nEMUTrans = len(tmpEMUTrans)
-                    newEMUTrans = [(1./nEMUTrans,EMUTrans) for EMUTrans in tmpEMUTrans]    
+                    newEMUTrans = [(utils.old_div(1.,nEMUTrans),EMUTrans) for EMUTrans in tmpEMUTrans]
                     EMUTransitions.extend(newEMUTrans)
                         
                 # Find origin EMUs and do the same for them

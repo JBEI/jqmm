@@ -9,20 +9,28 @@ It should be eventually phased out in favour of arrowland in:
 https://public-arrowland.jbei.org/
 
 """
+from __future__ import print_function
+from __future__ import division
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
+import utilities as utils
 import re
 import math
 
 import core
 from svgpathparser import parse_path
 from lxml import etree
-from StringIO import StringIO
+from io import StringIO
 
 
 transcriptomicsHaloColor = '#FFDC60'
 proteomicsHaloColor = '#BEF7FF'
 
-class FluxMap:
+class FluxMap(object):
 	"Class for drawing a flux map"
 	def __init__(self,inputFilename='default',inputString='default',zoomLevel=3):
 
@@ -83,7 +91,7 @@ class FluxMap:
 		cofactorDict = {}
 		textDict = {}  
 		for entity in self.mapElements:
-			if not entity.attrib.has_key('id'):
+			if 'id' not in entity.attrib:
 				continue
 			if not hasattr(entity, 'tag'):
 				continue
@@ -127,7 +135,7 @@ class FluxMap:
 							continue
 						subPaths.append(s)
 						childID = 'none'
-						if s.attrib.has_key('id'):
+						if 'id' in s.attrib:
 							childID = s.attrib['id']
 						if rname not in pathDict:
 							pathDict[rname] = {}
@@ -188,7 +196,7 @@ class FluxMap:
 		fluxOutProtMarker = None	# Proteomics indicator marker designed to hand off the left-half of the flux-out marker
 
 		for entity in defSection.iterchildren():
-			if not entity.attrib.has_key('id'):
+			if 'id' not in entity.attrib:
 				continue
 			if not hasattr(entity, 'tag'):
 				continue
@@ -272,7 +280,7 @@ class FluxMap:
 			v = (8 * math.log((v * 0.33) + 2)) + 1.63
 		# Below x=2/3, we approach 8 on a sharp curve that inflects at around x=1/3
 		else:
-			j = 1 - math.sin((math.pi/2.1)*v)
+			j = 1 - math.sin((utils.old_div(math.pi,2.1))*v)
 			v = 8 - (8 * (j*j*j))
 		return v
 
@@ -302,21 +310,21 @@ class FluxMap:
 		for p in self.pathDict:
 			for q in self.pathDict[p]:
 				for r in self.pathDict[p][q]:
-					if r.attrib.has_key('hasStartMarker'):
+					if 'hasStartMarker' in r.attrib:
 						r.attrib.pop('hasStartMarker')
 						numberAltered += 1
-					if r.attrib.has_key('hasEndMarker'):
+					if 'hasEndMarker' in r.attrib:
 						r.attrib.pop('hasEndMarker')
 						numberAltered += 1
 		if z < 2:
 			# Below zoom level 2, we hide all the cofactor marks
-			for name in self.cofactorDict.keys():
+			for name in list(self.cofactorDict.keys()):
 				for entity in self.cofactorDict[name]:
 					entity.getparent().remove(entity)
 					numberRemoved += 1
 		if z < 3:
 			# Below zoom level 3, we hide all the text labels
-			for name in self.textDict.keys():
+			for name in list(self.textDict.keys()):
 				for entity in self.textDict[name]:
 					entity.getparent().remove(entity)
 					numberRemoved += 1
@@ -362,7 +370,7 @@ class FluxMap:
 		for q in parts:
 			# We need a style attribute and a path definition attribute to work with.  If none is present,
 			# we're probably looking at a text node or some other improperly formed element.
-			if ((not q.attrib.has_key('style')) or (not q.attrib.has_key('d'))):
+			if (('style' not in q.attrib) or ('d' not in q.attrib)):
 				continue
 			st = q.attrib['style']
 			pathD = q.attrib['d']
@@ -396,10 +404,10 @@ class FluxMap:
 			st = re.sub('marker-end:url\([^\)]+\);','',st)
 
 			hasStartMarker = False
-			if q.attrib.has_key('hasStartMarker'):
+			if 'hasStartMarker' in q.attrib:
 				hasStartMarker = True
 			hasEndMarker = False
-			if q.attrib.has_key('hasEndMarker'):
+			if 'hasEndMarker' in q.attrib:
 				hasEndMarker = True
 
 			# If null fluxValue, mark the line as absent from the map data
@@ -438,19 +446,19 @@ class FluxMap:
 				scaledFlux	= self.fluxToArrowScaler(abs(fluxValue))
 
 				# Then we use that to find the start width and the end width
-				wStart = min(2.0,scaledFlux/2)
+				wStart = min(2.0,utils.old_div(scaledFlux,2))
 				wEnd = max(scaledFlux,0.5)
 
 				# Report what we're doing
 				self.logStrings.append("Building paths for " + name + " fluxValue " + str(fluxValue) + " wStart " + str(wStart) + " wEnd " + str(wEnd))
 
 				# Rebuild the path as the definition for a solid shape
-				newPOffset = wEnd/2
-				newPStart = wStart/wEnd
+				newPOffset = utils.old_div(wEnd,2)
+				newPStart = utils.old_div(wStart,wEnd)
 				newPEnd = 1
 				if fluxValue < 0:
 					newPStart = 1
-					newPEnd = wStart/wEnd
+					newPEnd = utils.old_div(wStart,wEnd)
 				offsetPath = parsedPath.simpleOffestPathToShape(newPOffset, 0-newPOffset, newPStart, newPEnd)
 				# Embed it back in the original SVG path element
 				q.set('d', offsetPath.getPathFragment())
@@ -542,7 +550,7 @@ class FluxMap:
 			return
 
 		for label in labels:
-			if label.attrib.has_key('style'):
+			if 'style' in label.attrib:
 				st = label.attrib['style']
 				if not st.endswith(';'):
 					st = st + ';'
@@ -610,7 +618,7 @@ class FluxMap:
 		reactDict = rNetwork.reactionList.getReactionDictionary()
 
 		# Only do further decoration for reactions that have a flux value.
-		for fluxName in fluxDict.keys():					
+		for fluxName in list(fluxDict.keys()):					
 			value = fluxDict[fluxName]
 			transcriptomicsPresent = False
 			proteomicsPresent = False
@@ -633,7 +641,7 @@ class FluxMap:
 
 # Class for drawing flux maps
 # TODO: Delete this when all maps are actualized
-class FluxMapOLD:
+class FluxMapOLD(object):
     "class representing a flux map"
 
     def __init__(self,basefile,strokewidth_multiplier=3,max_strokewidth=5,min_strokewidth=0.2):
@@ -850,7 +858,7 @@ class FluxMapOLD:
             self.changeflux(name,'---')
         
         # Then change flux values
-        for name in fluxdict.keys():                    
+        for name in list(fluxdict.keys()):                    
             value = fluxdict[name]
             self.changeflux(name,value)
 
@@ -867,4 +875,4 @@ class FluxMapOLD:
 ############### Tests ##################
 if __name__ == "__main__":
 	
-	print "No tests..."
+	print("No tests...")

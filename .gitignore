@@ -1,5 +1,6 @@
 # git ignore file test
 *.DS_Store
+.idea   
 dockerContainer/gamslice.txt
 *.gdx*
 *.lst*
@@ -16,3 +17,4 @@ matsol.gms
 *.txt~
 *.nfs*
 input.mat
+*.bak

@@ -1,7 +1,9 @@
+from __future__ import print_function
 # Part of the JBEI Quantitative Metabolic Modeling Library (JQMM)
 # Copyright (c) 2016, The Regents of the University of California.
 # For licensing details see "license.txt" and "legal.txt".
 
+from builtins import str
 import re
 import core
 import NamedRangedNumber
@@ -104,11 +106,12 @@ class GeneSet(NamedRangedNumber.NamedRangedNumberSet):
                 itemStrings = re.split("\s+and\s+", collectionStr)
                 for itemString in itemStrings:
                     item = Gene.fromString(itemString)
-                    if givenValues.has_key(item.canonicalName):
+                    if item.canonicalName in givenValues:
                         item.set(givenValues[item.canonicalName])
                     items.append(item)
                 if items:
                     subSets.append(GeneSet(items))
+        # is a list of GeneSets
         return subSets
 
 
@@ -120,51 +123,51 @@ def test():
 
     try:
         vError = False
-        print "Instantiating from illegal string \"test=[2,3,4]\", expecting failure ..."
+        print("Instantiating from illegal string \"test=[2,3,4]\", expecting failure ...")
         a = Gene.fromString("test=[2,3,4]")
     except ValueError:
         vError = True
-        print "\tGot ValueError as expected."
+        print("\tGot ValueError as expected.")
         pass
     assert vError, "NamedRangedNumber accepted wrong input."
 
-    print "\nInstantiating from string value \"test=[2:3:4]\" ..."
+    print("\nInstantiating from string value \"test=[2:3:4]\" ...")
 
     a = Gene.fromString("test=[2:3:4]")
     assert a.canonicalName == 'test', "Name wrong"
     b = Gene.fromString("dorks=[0.5:1:1.5]")
     c = a + 3
-    print "\t" + str(a) + ' + 3 = ' + str(c)
+    print("\t" + str(a) + ' + 3 = ' + str(c))
     d = a + b
-    print "\t" + str(a) + ' + ' + str(b) + ' = ' + str(d)
+    print("\t" + str(a) + ' + ' + str(b) + ' = ' + str(d))
     assert d.value.best == 4.0, "Addition failure, d.value.best should be 4.0."
 
-    print "\nInstantiating a GeneSet from an invalid string, expecting failure:"
+    print("\nInstantiating a GeneSet from an invalid string, expecting failure:")
     strA = "(bob fred frank) or (jed and Bill123) and (fred & billyBob) or captainAmerica"
-    print "\t" + strA
+    print("\t" + strA)
     try:
         aError = False
         geneSets = GeneSet.createSetsFromStrings(strA)
     except AssertionError:
         aError = True
-        print "\tGot AssertionError as expected."
+        print("\tGot AssertionError as expected.")
         pass
     assert aError, "GeneSet.createSetsFromStrings accepted wrong input."
 
-    print "\nInstantiating a GeneSet from strings:"
+    print("\nInstantiating a GeneSet from strings:")
     strA = "(bob and fred and frank) or (jed and Bill123) or (fred and billyBob) or captainAmerica"
     strB = "bob=12 fred=45 frank=[1:2:3] jed=10.1 Bill123=1"
-    print "\t" + strA
-    print "\t" + strB
+    print("\t" + strA)
+    print("\t" + strB)
     subSets = GeneSet.createSetsFromStrings(strA, strB)
     masterSet = GeneSet()
     newSubSets = []
-    print "Master set:"
+    print("Master set:")
     for subSet in subSets:
         newSubSets.append(masterSet.recastSet(subSet))
-    print "\t" + str(masterSet)
-    print "Subsets consolidated, for embedding:"
-    print "\t" + GeneSet.createStringFromSets(newSubSets)
-    print "Significance test result for master set:" + str(masterSet.testSignificance(12))
+    print("\t" + str(masterSet))
+    print("Subsets consolidated, for embedding:")
+    print("\t" + GeneSet.createStringFromSets(newSubSets))
+    print("Significance test result for master set:" + str(masterSet.testSignificance(12)))
 
 

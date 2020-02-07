@@ -6,6 +6,7 @@
 The predictions module provides a couple of small classes and a function to predict fluxes from a reference flux set using 
 Minimization of Metabolic Adjustment (MoMA, Segre et al PNAS 2002) or Regulatory On/Off Minimization (ROOM, Shlomi et al PNAS 2005) 
 """
+from __future__ import division
 
 import os
 import FluxModels, GAMSclasses, core, ReactionNetworks
@@ -68,7 +69,8 @@ class MOMAmodel(FluxModels.FluxModel):
         tmpDir = os.getcwd()+'/tmpDir/'
         try:
             os.mkdir(tmpDir)
-        except OSError as (errno,strerror):
+        except OSError as xxx_todo_changeme:
+            (errno,strerror) = xxx_todo_changeme.args
             if (errno ==17) and (strerror == 'File exists'):
                 pass   # Directory already there
             else:
@@ -208,7 +210,7 @@ def predict(results,geneName,method='MOMA',sbmlFileName='default'):
     for result in predResults:
         fluxDict = result.Vout.getReactionList().getFluxDictionary()
         fluxDictList.append(fluxDict)
-    fluxNames   = predResults[0].Vout.getReactionList().getFluxDictionary().keys() 
+    fluxNames   = list(predResults[0].Vout.getReactionList().getFluxDictionary().keys()) 
     fluxDictRef = fluxDictList[0]
     
     fluxDictEnsemble = FluxModels.fluxDictEns(fluxDictList,fluxNames,fluxDictRef=fluxDictList[0])
@@ -239,7 +241,7 @@ def predict(results,geneName,method='MOMA',sbmlFileName='default'):
         fluxDict = results.reactionNetwork.reactionList.getFluxDictionary(rangeComp='all')  
     
     for reaction in TSModel.reactionNetwork.C13ReacNet.reactionList:
-        net           = rangedFluxDictAll[reaction.name].net*(1/inFluxRef)
+        net           = rangedFluxDictAll[reaction.name].net*(utils.old_div(1,inFluxRef))
         exch          = fluxDict[reaction.name].exchange
         reaction.flux = core.flux(net_exc_tup=(net,exch))  
          

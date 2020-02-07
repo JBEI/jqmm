@@ -7,13 +7,19 @@ i.e. all reactions along with metabolites and how they are interrelated.
 Special classes for C13 MFA and 2S-13C MFA are provided
 for their particular information requirements.
 """
+from __future__ import print_function
+from __future__ import division
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import os, re, numpy, random
 import GAMSclasses, core, DB, enhancedLists, labeling, sbmlio
 import utilities as utils
 
 
-class ReactionNetwork:
+class ReactionNetwork(object):
     """ 
         A general class for reaction networks.
         Currently supports SBML file input and output, as well as a tuple defining the major pieces of a ReactionNetwork.
@@ -33,6 +39,8 @@ class ReactionNetwork:
         self.notes        = {}
         self.metList      = []
         self.reactionList = []
+        self.geneSet = None
+        self.proteinSet = None
 
         errorCount = 0
         logStrings = []
@@ -68,6 +76,8 @@ class ReactionNetwork:
                 self.notes        = sbmlImporter.model_notes
                 self.metList      = sbmlImporter.metList
                 self.reactionList = sbmlImporter.reactionList
+                self.geneSet      = sbmlImporter.masterGeneSet
+                self.proteinSet   = sbmlImporter.masterProteinSet
 
                 self.errorCount   = sbmlImporter.errorCount
                 self.logStrings   = sbmlImporter.logStrings
@@ -305,7 +315,7 @@ class ReactionNetwork:
                 reaction.measured = True
         elif isinstance(flux, tuple):
             lb,ub = flux
-            fluxNew = core.flux(((core.rangedNumber(lb,(lb+ub)/2,ub)),(core.rangedNumber(0,0,0))))
+            fluxNew = core.flux(((core.rangedNumber(lb,utils.old_div((lb+ub),2),ub)),(core.rangedNumber(0,0,0))))
             self.changeFluxBounds(reactionName, fluxNew)      
         else:      # shortened version                 
             try:            
@@ -313,7 +323,7 @@ class ReactionNetwork:
                 fluxNew = core.flux(((core.rangedNumber(bounds,bounds,bounds)),(core.rangedNumber(0,0,0))))
                 self.changeFluxBounds(reactionName, fluxNew)       
             except:
-                print 'wrong input!!!'
+                print('wrong input!!!')
 
 
     def loadFluxBounds(self, fileName, convert2SBML=True, measured=False):
@@ -387,7 +397,7 @@ class ReactionNetwork:
                     ub = reaction.fluxBounds.net.hi
                     lb = reaction.fluxBounds.net.lo
                     if abs(ub-lb) < max(0.1*abs(ub),0.01): 
-                        value = -abs((ub+lb)/2) 
+                        value = -abs(utils.old_div((ub+lb),2))
                     else:
                         value = 0
                 else:
@@ -580,10 +590,10 @@ class C13ReactionNetwork(ReactionNetwork):
                     present     = True                
                     
                 if not present and verbose:
-                    print "emu " + fragRef.emu + " not present in emu network"
+                    print("emu " + fragRef.emu + " not present in emu network")
             else:
-                print "fragDictBasic:"
-                print sorted(fragDictBasic)
+                print("fragDictBasic:")
+                print(sorted(fragDictBasic))
                 raise Exception('Fragment ' + abbrev + ' not in fragment dictionary')
         
         return fragDictOut    
@@ -774,7 +784,7 @@ class C13ReactionNetwork(ReactionNetwork):
             compDict = {}
             for comp in comps:
                 compName = comp.split(' ')[1] # e.g.: UN or 1-C
-                compPerc = float(comp.split(' ')[0].replace('%','')) / 100 # e.g.: 0.30
+                compPerc = utils.old_div(float(comp.split(' ')[0].replace('%','')), 100) # e.g.: 0.30
                 compDict[compName] = compPerc
             # Feed Dict , e.g. {'Glu': {'1-C': 0.3, 'UN': 0.5, 'U': 0.2}}    
             feedDict[metName] = compDict 
@@ -1247,7 +1257,7 @@ class TSReactionNetwork(C13ReactionNetwork):
         
         # Decide wether to use bounds or net flux to give the reference
         if bounds:
-            inFluxRef = abs((inReaction.fluxBounds.net.hi+inReaction.fluxBounds.net.lo)/2)   
+            inFluxRef = abs(utils.old_div((inReaction.fluxBounds.net.hi+inReaction.fluxBounds.net.lo),2))
         else:
             inFluxRef  = abs(inReaction.flux.getComp('net','best'))
 
